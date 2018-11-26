@@ -330,9 +330,12 @@ function displayRADAR(id, options, $element, layout, data, self) {
     d3.selectAll(".radarArea")
       .transition().duration(200)
       .style("fill-opacity", 0.9);
-
+    if(data[d][0].value === "NaN"){
+      return;
+    }else{
+      self.backendApi.selectValues(0, [data[d][0].radar_area_id], true);
+    }
     // Select Value
-    self.backendApi.selectValues(0, [data[d][0].radar_area_id], true);
   }
 
   // on mouseout for the legend symbol
