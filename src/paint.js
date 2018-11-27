@@ -129,11 +129,25 @@ function convertHYPERCUBEtoJSON(layout) {
     var dim1Id = qMatrix.map(function(d) {
       return d[0].qElemNumber;
     });
+    var dim1IsNull = qMatrix.map(function(d) {
+      if (d[0].qIsNull){
+        return d[0].qIsNull;
+      }else{
+        return false;
+      }
+    });
     var dim2Labels = qMatrix.map(function(d) {
       return d[1].qText;
     });
     var dim2Id = qMatrix.map(function(d) {
       return d[1].qElemNumber;
+    });
+    var dim2IsNull = qMatrix.map(function(d) {
+      if (d[1].qIsNull){
+        return d[1].qIsNull;
+      }else{
+        return false;
+      }
     });
     var metric1Values = qMatrix.map(function(d) {
       return d[2].qNum;
@@ -146,8 +160,15 @@ function convertHYPERCUBEtoJSON(layout) {
     var dim1Id = qMatrix.map(function(d) {
       return d[0].qElemNumber;
     });
+    var dim1IsNull = qMatrix.map(function(d) {
+      if (d[0].qIsNull){
+        return d[0].qIsNull;
+      }
+    });
     var dim2Labels = dim1Labels;
     var dim2Id = dim1Id;
+    var dim2IsNull = dim1IsNull;
+
     var metric1Values = qMatrix.map(function(d) {
       return d[1].qNum;
     });
@@ -180,11 +201,11 @@ function convertHYPERCUBEtoJSON(layout) {
         myJson.dim_id = dim1Id[k];
         myJson.dim = dim1Labels[k];
         // Make sure radar_area is added for usage in the radar chart layers later
-        myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k] };
+        myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "dim2IsNull": dim2IsNull[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k], "dim1IsNull": dim1IsNull[k] };
         cont++;
         // Make sure radar_area is added for usage in the radar chart layers later
       }else{
-        myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k] };
+        myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "dim2IsNull": dim2IsNull[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k], "dim1IsNull": dim1IsNull[k] };
         cont++;
       }
       actClassName = dim1Labels[k];
@@ -195,7 +216,7 @@ function convertHYPERCUBEtoJSON(layout) {
       // it is a different grouping value of Dim1
       LegendValues.push(dim1Labels[k]);
       // Make sure radar_area is added for usage in the radar chart layers later
-      myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k] };
+      myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "dim2IsNull": dim2IsNull[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "dim1IsNull": dim1IsNull[k], "value" : metric1Values[k] };
       cont++;
     }
     data[contdata] = myJson;
