@@ -27,12 +27,17 @@ const COLOR_SCALES = Object.freeze({
 });
 /* eslint-enable max-len */
 
-function setDimensionLimit(dimension, handler) {
-  if(handler.getDimensions().indexOf(dimension) === 1) {
-    dimension.qOtherTotalSpec.qOtherMode = 'OTHER_COUNTED';
-    dimension.qOtherTotalSpec.qOtherCounted = { qv: '10' };
-  } else {
-    delete dimension.qOtherTotalSpec;
+function setDimensionLimit(handler) {
+  var dims = handler.getDimensions();
+  if(dims && dims.length) {
+    dims.forEach(function(d, i){
+      if(i === 1) {
+        d.qOtherTotalSpec.qOtherMode = 'OTHER_COUNTED';
+        d.qOtherTotalSpec.qOtherCounted = { qv: '10' };
+      } else {
+        delete d.qOtherTotalSpec;
+      }
+    });
   }
 }
 
@@ -52,13 +57,16 @@ export default {
       min: 2,
       max: 2,
       add(dimension, props, handler) {
-        setDimensionLimit(dimension, handler);
+        setDimensionLimit(handler);
+      },
+      remove(dimension, props, handler) {
+        setDimensionLimit(handler);
       },
       move(dimension, props, handler) {
-       setDimensionLimit(dimension, handler);
+        setDimensionLimit( handler);
       },
       replace(dimension, old, index, props, handler) {
-        setDimensionLimit(dimension, handler);
+        setDimensionLimit(handler);
       }
     },
     measures: {
