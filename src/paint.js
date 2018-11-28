@@ -129,11 +129,9 @@ function convertHYPERCUBEtoJSON(layout) {
     var dim1Id = qMatrix.map(function(d) {
       return d[0].qElemNumber;
     });
-    var dim1IsNull = qMatrix.map(function(d) {
-      if (d[0].qIsNull){
+    var dim1IsNullAtIndex = qMatrix.map(function(d) {
+      if (d[0].hasOwnProperty('qIsNull')){
         return d[0].qIsNull;
-      }else{
-        return false;
       }
     });
     var dim2Labels = qMatrix.map(function(d) {
@@ -142,11 +140,9 @@ function convertHYPERCUBEtoJSON(layout) {
     var dim2Id = qMatrix.map(function(d) {
       return d[1].qElemNumber;
     });
-    var dim2IsNull = qMatrix.map(function(d) {
-      if (d[1].qIsNull){
+    var dim2IsNullAtIndex = qMatrix.map(function(d) {
+      if (d[1].hasOwnProperty('qIsNull')){
         return d[1].qIsNull;
-      }else{
-        return false;
       }
     });
     var metric1Values = qMatrix.map(function(d) {
@@ -160,14 +156,14 @@ function convertHYPERCUBEtoJSON(layout) {
     var dim1Id = qMatrix.map(function(d) {
       return d[0].qElemNumber;
     });
-    var dim1IsNull = qMatrix.map(function(d) {
-      if (d[0].qIsNull){
+    var dim1IsNullAtIndex = qMatrix.map(function(d) {
+      if (d[0].hasOwnProperty('qIsNull')){
         return d[0].qIsNull;
       }
     });
     var dim2Labels = dim1Labels;
     var dim2Id = dim1Id;
-    var dim2IsNull = dim1IsNull;
+    var dim2IsNullAtIndex = dim1IsNullAtIndex;
 
     var metric1Values = qMatrix.map(function(d) {
       return d[1].qNum;
@@ -184,43 +180,37 @@ function convertHYPERCUBEtoJSON(layout) {
   var cont = 0;
   var contdata = 0;
   var LegendValues = [];
-  if(dimensions.length==2){
-    for(var k=0;k<dim1Labels.length;k++){
-      if(actClassName!=dim1Labels[k] ){
-        if(cont!=0){
-          data[contdata] = myJson;
-          contdata++;
-        }
-        // it is a different grouping value of Dim1
-        LegendValues.push(dim1Labels[k]);
-        var myJson = {};
-        myJson.dim_id = "";
-        myJson.dim = "";
-        myJson.definition = [];
-        cont = 0;
-        myJson.dim_id = dim1Id[k];
-        myJson.dim = dim1Labels[k];
-        // Make sure radar_area is added for usage in the radar chart layers later
-        myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "dim2IsNull": dim2IsNull[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k], "dim1IsNull": dim1IsNull[k] };
-        cont++;
-        // Make sure radar_area is added for usage in the radar chart layers later
-      }else{
-        myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "dim2IsNull": dim2IsNull[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k], "dim1IsNull": dim1IsNull[k] };
-        cont++;
+  for(var k=0;k<dim1Labels.length;k++){
+    if(actClassName!=dim1Labels[k] ){
+      if(cont!=0){
+        data[contdata] = myJson;
+        contdata++;
       }
-      actClassName = dim1Labels[k];
-    }
-    data[contdata] = myJson;
-  }else{
-    for(var k=0;k<dim1Labels.length;k++){
       // it is a different grouping value of Dim1
       LegendValues.push(dim1Labels[k]);
+      var myJson = {};
+      myJson.dim_id = "";
+      myJson.dim = "";
+      myJson.definition = [];
+      cont = 0;
+      myJson.dim_id = dim1Id[k];
+      myJson.dim = dim1Labels[k];
       // Make sure radar_area is added for usage in the radar chart layers later
-      myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "dim2IsNull": dim2IsNull[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "dim1IsNull": dim1IsNull[k], "value" : metric1Values[k] };
+      myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k] };
+      dim2IsNullAtIndex[k] ? myJson.definition[cont].dim2IsNull = dim2IsNullAtIndex[k] : null;
+      dim1IsNullAtIndex[k] ? myJson.definition[cont].dim1IsNull = dim1IsNullAtIndex[k] : null;
+      cont++;
+    // Make sure radar_area is added for usage in the radar chart layers later
+    }
+    else{
+      myJson.definition[cont] = { "axis_id" : dim2Id[k], "axis" : dim2Labels[k], "radar_area_id" : dim1Id[k], "radar_area" : dim1Labels[k], "value" : metric1Values[k] };
+      dim2IsNullAtIndex[k] ? myJson.definition[cont].dim2IsNull = dim2IsNullAtIndex[k] : null;
+      dim1IsNullAtIndex[k] ? myJson.definition[cont].dim1IsNull = dim1IsNullAtIndex[k] : null;
       cont++;
     }
-    data[contdata] = myJson;
+    actClassName = dim1Labels[k];
   }
+  data[contdata] = myJson;
   return data;
 }
 
