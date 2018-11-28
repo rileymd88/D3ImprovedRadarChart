@@ -43,12 +43,16 @@ function displayRADAR(id, options, $element, layout, data, self) {
 
   if(cfg.size.width < cfg.size.height) {var graphH = cfg.size.width; var graphW = cfg.size.width;} else {var graphH = cfg.size.height; var graphW = cfg.size.height; }
 
-  var allAxis = (data[0].map(function(i){return i.axis;})),				//Names of each axis
-    total = allAxis.length,												//The number of different axes
-    radius = Math.min(
-      (graphW/2) - cfg.margin.left - cfg.margin.right,
-      (graphH/2) - cfg.margin.top - cfg.margin.bottom), 				//Radius of the outermost circle
-    angleSlice = Math.PI * 2 / total;									//The width in radians of each "slice"
+  var allAxis = (data[0].map(function(i){return i.axis;}));				//Names of each axis
+  var axisTheshHold = 100;
+  if (allAxis.length > axisTheshHold){
+    allAxis = allAxis.slice(0 , axisTheshHold);
+  }
+  var total = allAxis.length;												//The number of different axes
+  var radius = Math.min(
+    (graphW/2) - cfg.margin.left - cfg.margin.right,
+    (graphH/2) - cfg.margin.top - cfg.margin.bottom); 				//Radius of the outermost circle
+  var angleSlice = Math.PI * 2 / total;									//The width in radians of each "slice"
 
   //Scale for the radius
   var rScale = d3.scale.linear()

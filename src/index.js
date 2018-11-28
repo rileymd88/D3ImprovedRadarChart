@@ -33,7 +33,7 @@ function setDimensionLimit(handler) {
     dims.forEach(function(d, i){
       if(i === 1) {
         d.qOtherTotalSpec.qOtherMode = 'OTHER_COUNTED';
-        d.qOtherTotalSpec.qOtherCounted = { qv: '10' };
+        d.qOtherTotalSpec.qOtherCounted = { qv: '20' };
       } else {
         delete d.qOtherTotalSpec;
       }
