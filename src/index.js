@@ -27,6 +27,15 @@ const COLOR_SCALES = Object.freeze({
 });
 /* eslint-enable max-len */
 
+function setDimensionLimit(dimension, handler) {
+  if(handler.getDimensions().indexOf(dimension) === 1) {
+    dimension.qOtherTotalSpec.qOtherMode = 'OTHER_COUNTED';
+    dimension.qOtherTotalSpec.qOtherCounted = { qv: '10' };
+  } else {
+    delete dimension.qOtherTotalSpec;
+  }
+}
+
 export default {
   initialProperties: {
     qHyperCubeDef: {
@@ -41,7 +50,16 @@ export default {
   data: {
     dimensions: {
       min: 2,
-      max: 2
+      max: 2,
+      add(dimension, props, handler) {
+        setDimensionLimit(dimension, handler);
+      },
+      move(dimension, props, handler) {
+       setDimensionLimit(dimension, handler);
+      },
+      replace(dimension, old, index, props, handler) {
+        setDimensionLimit(dimension, handler);
+      }
     },
     measures: {
       min: 1,
