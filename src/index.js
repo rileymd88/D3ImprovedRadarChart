@@ -42,6 +42,17 @@ function setDimensionLimit(handler) {
   }
 }
 
+function setInitialSort(props) {
+  if (!props.qHyperCubeDef) {
+    return;
+  }
+  const dims = props.qHyperCubeDef.qDimensions;
+  const measures = props.qHyperCubeDef.qMeasures;
+  if (dims.length === 2 && measures.length === 1) {
+    props.qHyperCubeDef.qInterColumnSortOrder = [0,1,2];
+  }
+}
+
 export default {
   initialProperties: {
     qHyperCubeDef: {
@@ -59,15 +70,18 @@ export default {
       max: 2,
       add(dimension, props, handler) {
         setDimensionLimit(handler);
+        setInitialSort(props);
       },
       remove(dimension, props, handler) {
         setDimensionLimit(handler);
       },
       move(dimension, props, handler) {
         setDimensionLimit( handler);
+        setInitialSort(props);
       },
       replace(dimension, old, index, props, handler) {
         setDimensionLimit(handler);
+        setInitialSort(props);
       }
     },
     measures: {
@@ -94,9 +108,6 @@ export default {
             disabledRef: ""
           }
         }
-      },
-      sorting: {
-        uses: "sorting"
       },
       settings: {
         uses: "settings",
@@ -211,12 +222,5 @@ export default {
   snapshot: {
     canTakeSnapshot: true
   },
-  paint: paint //($element, layout) => {
-  //   const component = this;
-  //   try {
-  //     paint($element, layout, component);
-  //   } catch (exception) {
-  //     console.error(exception); // eslint-disable-line no-console
-  //   }
-  // }
+  paint: paint
 };

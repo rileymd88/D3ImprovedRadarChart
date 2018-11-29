@@ -23,7 +23,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     labelFactor: 1.25, 															//How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 100, 															//The number of pixels after which a label needs to be given a new line
     strokeWidth: 1.5, 															//The width of the stroke around each blob
-    sortingCheck: [true],														//The sorting configuration
+//    sortingCheck: [true],														//The sorting configuration
     legendDisplay: true															//Display the legend
   };
 
