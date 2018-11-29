@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import d3 from 'd3';
 import displayRADAR from './radarChart';
 
@@ -28,7 +27,7 @@ function paint ($element, layout) {
     labelFactor: 1.02, 																			//How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 50, 																				//The number of pixels after which a label needs to be given a new line
     strokeWidth: 2.8, 																			//The width of the stroke around each blob
-//    sortingCheck: checkSORTING(layout),															//The sorting configuration
+    //sortingCheck: checkSORTING(layout),															//The sorting configuration
     legendDisplay: layout.showLegend,															//Display the legend
     numberFormat: getFORMAT(layout)																//Format for number
   };
