@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import d3 from 'd3';
 import displayRADAR from './radarChart';
 
@@ -28,7 +27,7 @@ function paint ($element, layout) {
     labelFactor: 1.02, 																			//How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 50, 																				//The number of pixels after which a label needs to be given a new line
     strokeWidth: 2.8, 																			//The width of the stroke around each blob
-    sortingCheck: checkSORTING(layout),															//The sorting configuration
+    //sortingCheck: checkSORTING(layout),															//The sorting configuration
     legendDisplay: layout.showLegend,															//Display the legend
     numberFormat: getFORMAT(layout)																//Format for number
   };
@@ -36,12 +35,8 @@ function paint ($element, layout) {
   //////////////////////////////////////////////////////////////
   //////////////////// Draw the Chart //////////////////////////
   //////////////////////////////////////////////////////////////
+  displayRADAR(".radarChart", options, $element, layout, json, component);
 
-  if(options.sortingCheck[0] == true) {
-    displayRADAR(".radarChart", options, $element, layout, json, component);
-  } else {
-    displayMESSAGE(".radarChart", options, $element, layout, options.sortingCheck[2]);
-  }
 }
 
 function getFORMAT(layout) {
@@ -77,7 +72,7 @@ function getFORMAT(layout) {
   return result;
 }
 
-function checkSORTING(layout) {
+/*function checkSORTING(layout) {
   var result = [];
 
   // Detect if sorting is correct
@@ -110,7 +105,7 @@ function checkSORTING(layout) {
   result[1] = navigator.language.toUpperCase().split("-")[0];
 
   return result;
-}
+}*/
 
 function convertHYPERCUBEtoJSON(layout) {
 // get qMatrix data array
@@ -200,24 +195,6 @@ function convertHYPERCUBEtoJSON(layout) {
     data[contdata] = myJson;
   }
   return data;
-}
-
-function displayMESSAGE(id, cfg, $element, layout) {
-// Remove whatever chart with the same id/class was present before
-  d3.select(id).select("svg").remove();
-
-  // Chart object id
-  var id = "container_" + layout.qInfo.qId;
-
-  // Check to see if the chart element has already been created
-  if (document.getElementById(id)) {
-    // if it has been created, empty its contents so we can redraw it
-    $("#" + id).empty();
-  }
-  else {
-    // if it hasn't been created, create it with the appropiate id and size
-    $element.append($('<div />').attr("id", id).width(cfg.size.width).height(cfg.size.height));
-  }
 }
 
 export default paint;
