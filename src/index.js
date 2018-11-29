@@ -28,6 +28,20 @@ const COLOR_SCALES = Object.freeze({
 });
 /* eslint-enable max-len */
 
+function setDimensionLimit(handler) {
+  var dims = handler.getDimensions();
+  if(dims && dims.length) {
+    dims.forEach(function(d, i){
+      if(i === 1) {
+        d.qOtherTotalSpec.qOtherMode = 'OTHER_COUNTED';
+        d.qOtherTotalSpec.qOtherCounted = { qv: '20' };
+      } else {
+        delete d.qOtherTotalSpec;
+      }
+    });
+  }
+}
+
 export default {
   initialProperties: {
     qHyperCubeDef: {
@@ -42,7 +56,19 @@ export default {
   data: {
     dimensions: {
       min: 2,
-      max: 2
+      max: 2,
+      add(dimension, props, handler) {
+        setDimensionLimit(handler);
+      },
+      remove(dimension, props, handler) {
+        setDimensionLimit(handler);
+      },
+      move(dimension, props, handler) {
+        setDimensionLimit( handler);
+      },
+      replace(dimension, old, index, props, handler) {
+        setDimensionLimit(handler);
+      }
     },
     measures: {
       min: 1,
