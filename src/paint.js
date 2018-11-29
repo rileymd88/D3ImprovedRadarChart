@@ -118,57 +118,34 @@ function convertHYPERCUBEtoJSON(layout) {
   var qMatrix = layout.qHyperCube.qDataPages[0].qMatrix;
 
   // create a new array that contains the measure labels
-  var dimensions = layout.qHyperCube.qDimensionInfo;
 
   // create a new array that contains the dimensions and metric values
-  // depending on whether if 1 or 2 dimensions are being used
-  if(dimensions.length==2){
-    var dim1Labels = qMatrix.map(function(d) {
-      return d[0].qText;
-    });
-    var dim1Id = qMatrix.map(function(d) {
-      return d[0].qElemNumber;
-    });
-    var dim1IsNullAtIndex = qMatrix.map(function(d) {
-      if (d[0].hasOwnProperty('qIsNull')){
-        return d[0].qIsNull;
-      }
-    });
-    var dim2Labels = qMatrix.map(function(d) {
-      return d[1].qText;
-    });
-    var dim2Id = qMatrix.map(function(d) {
-      return d[1].qElemNumber;
-    });
-    var dim2IsNullAtIndex = qMatrix.map(function(d) {
-      if (d[1].hasOwnProperty('qIsNull')){
-        return d[1].qIsNull;
-      }
-    });
-    var metric1Values = qMatrix.map(function(d) {
-      return d[2].qNum;
-    }) ;
-  }
-  else{
-    var dim1Labels = qMatrix.map(function(d) {
-      return d[0].qText;
-    });
-    var dim1Id = qMatrix.map(function(d) {
-      return d[0].qElemNumber;
-    });
-    var dim1IsNullAtIndex = qMatrix.map(function(d) {
-      if (d[0].hasOwnProperty('qIsNull')){
-        return d[0].qIsNull;
-      }
-    });
-    var dim2Labels = dim1Labels;
-    var dim2Id = dim1Id;
-    var dim2IsNullAtIndex = dim1IsNullAtIndex;
 
-    var metric1Values = qMatrix.map(function(d) {
-      return d[1].qNum;
-    });
-  }
+  var dim1Labels = qMatrix.map(function(d) {
+    return d[0].qText;
+  });
+  var dim1Id = qMatrix.map(function(d) {
+    return d[0].qElemNumber;
+  });
+  var dim1IsNullAtIndex = qMatrix.map(function(d) {
+    if (d[0].hasOwnProperty('qIsNull')){
+      return d[0].qIsNull;
+    }
+  });
+  var dim2Labels = qMatrix.map(function(d) {
+    return d[1].qText;
+  });
+  var dim2Id = qMatrix.map(function(d) {
+    return d[1].qElemNumber;
+  });
+  var dim2IsNullAtIndex = qMatrix.map(function(d) {
+    if (d[1].hasOwnProperty('qIsNull')){
+      return d[1].qIsNull;
+    }
+  });
+  var metric1Values = qMatrix.map(function(d) {
+    return d[2].qNum;
+  }) ;
 
   // create a JSON array that contains dimensions and metric values
   var data = [];
