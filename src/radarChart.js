@@ -205,14 +205,16 @@ function displayRADAR(id, options, $element, layout, data, self) {
         .style("fill-opacity", cfg.colorOpacity.area_over);
     })
     .on('click', function (d){
+      var isNull = false;
       d.find(e => {
         if(e.dim1IsNull === true || e.dim2IsNull === true){
-          return;
-        }else{
-          // Select Value
-          self.backendApi.selectValues(0, [d[0].radar_area_id], true);
+          isNull = true;
         }
       });
+      if(!isNull){
+        // Select Value
+        self.backendApi.selectValues(0, [d[0].radar_area_id], true);
+      }
     })
     .on('mouseout', function(){
       // keep mouse cursor arrow instead of text select (auto)
@@ -342,18 +344,20 @@ function displayRADAR(id, options, $element, layout, data, self) {
     $("#"+id).css('cursor','default');
 
     //Bring back all blobs
+    var isNull = false;
     data[d].find(e =>{
       if(e.dim1IsNull === true || e.dim2IsNull === true){
-        return;
-      }else{
-        d3.selectAll(".radarArea")
-          .transition().duration(200)
-          .style("fill-opacity", 0.9);
-
-        // Select Value
-        self.backendApi.selectValues(0, [data[d][0].radar_area_id], true);
+        isNull = true;
       }
     });
+    if(!isNull) {
+      d3.selectAll(".radarArea")
+        .transition().duration(200)
+        .style("fill-opacity", 0.9);
+
+      // Select Value
+      self.backendApi.selectValues(0, [data[d][0].radar_area_id], true);
+    }
   }
 
   // on mouseout for the legend symbol
