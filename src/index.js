@@ -131,6 +131,40 @@ export default {
                 }],
                 show: true
               },
+              Range: {
+                ref: "range",
+                component: "switch",
+                type: "boolean",
+                translation: "Range",
+                defaultValue: true,
+                trueOption: {
+                  value: true,
+                  translation: "Auto"
+                },
+                falseOption: {
+                  value: false,
+                  translation: "Custom"
+                },
+                show: true
+              },
+              MaxValue: {
+                ref: "maxValue",
+                type: "number",
+                expression: "optional",
+                defaultValue: 1,
+                show: function( data ) {
+                  return data.range === false;
+                }
+              },
+              MinValue: {
+                ref: "minValue",
+                type: "number",
+                expression: "optional",
+                defaultValue: 0,
+                show: function( data ) {
+                  return data.range === false;
+                }
+              },
               Legend: {
                 ref: "showLegend",
                 component: "switch",
