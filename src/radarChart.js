@@ -50,8 +50,8 @@ function displayRADAR(id, options, $element, layout, data, self) {
   }
   var total = allAxis.length;												//The number of different axes
   var radius = Math.min(
-    (graphW/2) - cfg.margin.left - cfg.margin.right,
-    (graphH/2) - cfg.margin.top - cfg.margin.bottom); 				//Radius of the outermost circle
+    (graphW/2) - (cfg.margin.left - cfg.margin.right),
+    (graphH/2) - (cfg.margin.top - cfg.margin.bottom)); 				//Radius of the outermost circle
   var angleSlice = Math.PI * 2 / total;									//The width in radians of each "slice"
 
   //Scale for the radius
