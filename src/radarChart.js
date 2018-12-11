@@ -201,7 +201,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .on('click', function (d){
       var isNull = false;
       d.find(e => {
-        if(e.dim1IsNull === true || e.dim2IsNull === true){
+        if(e.dim1IsNull === true/* || e.dim2IsNull === true*/){
           isNull = true;
         }
       });
@@ -351,7 +351,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     //Bring back all blobs
     var isNull = false;
     data[d].find(e =>{
-      if(e.dim1IsNull === true || e.dim2IsNull === true){
+      if(e.dim1IsNull === true /*|| e.dim2IsNull === true*/){
         isNull = true;
       }
     });
