@@ -110,7 +110,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .data(data)
     .enter().append("g")
     .attr("class", "radarWrapper");
-  var axisLebelWrapper = g.append('g').attr('class', 'axsisLabelWrapper');
+  var axisLabelWrapper = g.append('g').attr('class', 'axsisLabelWrapper');
 
   //Draw the background circles
   axisGrid.selectAll(".levels")
@@ -125,7 +125,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .style("filter" , "url(#glow)");
 
   //Text indicating at what % each level is
-  axisLebelWrapper.selectAll(".axisLabel")
+  axisLabelWrapper.selectAll(".axisLabel")
     .data(d3.range(1,(cfg.levels+1)).reverse())
     .enter().append("text")
     .attr("class", "axisLabel")
@@ -180,8 +180,6 @@ function displayRADAR(id, options, $element, layout, data, self) {
   if(cfg.roundStrokes) {
     radarLine.interpolate("cardinal-closed");
   }
-
-  //Create a wrapper for the blobs
 
 
   //Append the backgrounds
