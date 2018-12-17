@@ -111,6 +111,12 @@ function displayRADAR(id, options, $element, layout, data, self) {
 
   //Wrapper for the grid & axes
   var axisGrid = g.append("g").attr("class", "axisWrapper");
+  var axisContainer = g.append('g').attr('class','axisContainer');
+  var blobWrapper = g.selectAll(".radarWrapper")
+    .data(data)
+    .enter().append("g")
+    .attr("class", "radarWrapper");
+  var axisLabelWrapper = g.append('g').attr('class', 'axsisLabelWrapper');
 
   //Draw the background circles
   axisGrid.selectAll(".levels")
@@ -124,12 +130,24 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .style("fill-opacity", cfg.colorOpacity.circle)
     .style("filter" , "url(#glow)");
 
+  //Text indicating at what % each level is
+  axisLabelWrapper.selectAll(".axisLabel")
+    .data(d3.range(1,(cfg.levels+1)).reverse())
+    .enter().append("text")
+    .attr("class", "axisLabel")
+    .attr("x", 4)
+    .attr("y", function(d){return -d*radius/cfg.levels;})
+    .attr("dy", "0.4em")
+    .style("font-size", "12px")
+    .attr("fill", "#000000")
+    .text(function(d) { return format(options.numberFormat[0], (maxValue * d/cfg.levels)*options.numberFormat[1]) + options.numberFormat[2]; });
+
   /////////////////////////////////////////////////////////
   //////////////////// Draw the axes //////////////////////
   /////////////////////////////////////////////////////////
 
   //Create the straight lines radiating outward from the center
-  var axis = axisGrid.selectAll(".axis")
+  var axis = axisContainer.selectAll(".axis")
     .data(allAxis)
     .enter()
     .append("g")
@@ -169,11 +187,6 @@ function displayRADAR(id, options, $element, layout, data, self) {
     radarLine.interpolate("cardinal-closed");
   }
 
-  //Create a wrapper for the blobs
-  var blobWrapper = g.selectAll(".radarWrapper")
-    .data(data)
-    .enter().append("g")
-    .attr("class", "radarWrapper");
 
   //Append the backgrounds
   blobWrapper
