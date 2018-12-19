@@ -116,7 +116,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .data(data)
     .enter().append("g")
     .attr("class", "radarWrapper");
-  var axisLabelWrapper = g.append('g').attr('class', 'axsisLabelWrapper');
+  // var axisLabelWrapper = g.append('g').attr('class', 'axsisLabelWrapper');
 
   //Draw the background circles
   axisGrid.selectAll(".levels")
@@ -129,18 +129,6 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .style("stroke", "#CDCDCD")
     .style("fill-opacity", cfg.colorOpacity.circle)
     .style("filter" , "url(#glow)");
-
-  //Text indicating at what % each level is
-  axisLabelWrapper.selectAll(".axisLabel")
-    .data(d3.range(1,(cfg.levels+1)).reverse())
-    .enter().append("text")
-    .attr("class", "axisLabel")
-    .attr("x", 4)
-    .attr("y", function(d){return -d*radius/cfg.levels;})
-    .attr("dy", "0.4em")
-    .style("font-size", "12px")
-    .attr("fill", "#000000")
-    .text(function(d) { return format(options.numberFormat[0], (maxValue * d/cfg.levels)*options.numberFormat[1]) + options.numberFormat[2]; });
 
   /////////////////////////////////////////////////////////
   //////////////////// Draw the axes //////////////////////
