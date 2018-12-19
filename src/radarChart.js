@@ -40,6 +40,12 @@ function displayRADAR(id, options, $element, layout, data, self) {
 
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
   var maxValue = Math.max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}));}));
+  var minValue = Math.min(0, d3.min(data, function(i){return d3.min(i.map(function(o){return o.value;}));}));
+
+  if(layout.range === false) {
+    maxValue = isNaN(layout.maxValue) ? 1 : layout.maxValue;
+    minValue = isNaN(layout.minValue) ? 0 : layout.minValue;
+  }
 
   if(cfg.size.width < cfg.size.height) {var graphH = cfg.size.width; var graphW = cfg.size.width;} else {var graphH = cfg.size.height; var graphW = cfg.size.height; }
 
@@ -57,7 +63,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
   //Scale for the radius
   var rScale = d3.scale.linear()
     .range([0, radius])
-    .domain([0, maxValue]);
+    .domain([minValue, maxValue]);
 
   /////////////////////////////////////////////////////////
   //////////// Create the container SVG and g /////////////
@@ -208,7 +214,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .on('click', function (d){
       var isNull = false;
       d.find(e => {
-        if(e.dim1IsNull === true || e.dim2IsNull === true){
+        if(e.dim1IsNull === true){
           isNull = true;
         }
       });
@@ -293,6 +299,17 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+  g.selectAll(".axisLabel")
+    .data(d3.range(1,(cfg.levels+1)).reverse())
+    .enter().append("text")
+    .attr("class", "axisLabel")
+    .attr("x", 4)
+    .attr("y", function(d){return -d*radius/cfg.levels;})
+    .attr("dy", "0.4em")
+    .style("font-size", "12px")
+    .attr("fill", "#000000")
+    .text(function(d) { return format(options.numberFormat[0], (minValue + (maxValue - minValue) * d/cfg.levels)*options.numberFormat[1]) + options.numberFormat[2]; });
+
   /////////////////////////////////////////////////////////
   /////////////////// Helper Function /////////////////////
   /////////////////////////////////////////////////////////
@@ -347,7 +364,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     //Bring back all blobs
     var isNull = false;
     data[d].find(e =>{
-      if(e.dim1IsNull === true || e.dim2IsNull === true){
+      if(e.dim1IsNull === true){
         isNull = true;
       }
     });
