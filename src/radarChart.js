@@ -60,11 +60,11 @@ function displayRADAR(id, options, $element, layout, data, self) {
     (graphH/2) - cfg.margin.top - cfg.margin.bottom); 				//Radius of the outermost circle
   var angleSlice = Math.PI * 2 / total;									//The width in radians of each "slice"
 
-  //Scale for the radius
-  var rScale = d3.scale.linear()
+  const rScale = d3.scale.linear()
     .range([0, radius])
     .domain([minValue, maxValue]);
 
+  const rScaleRangeChecked = value => Number.isFinite(value) ? rScale(value) : 0;
   /////////////////////////////////////////////////////////
   //////////// Create the container SVG and g /////////////
   /////////////////////////////////////////////////////////
@@ -144,8 +144,8 @@ function displayRADAR(id, options, $element, layout, data, self) {
   axis.append("line")
     .attr("x1", 0)
     .attr("y1", 0)
-    .attr("x2", function(d, i){ return rScale(maxValue*1.1) * Math.cos(angleSlice*i - Math.PI/2); })
-    .attr("y2", function(d, i){ return rScale(maxValue*1.1) * Math.sin(angleSlice*i - Math.PI/2); })
+    .attr("x2", function(d, i){ return rScaleRangeChecked(maxValue*1.1) * Math.cos(angleSlice*i - Math.PI/2); })
+    .attr("y2", function(d, i){ return rScaleRangeChecked(maxValue*1.1) * Math.sin(angleSlice*i - Math.PI/2); })
     .attr("class", "line")
     .style("stroke", "white")
     .style("stroke-width", "2px");
@@ -156,8 +156,8 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .style("font-size", "14px")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
-    .attr("x", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
-    .attr("y", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
+    .attr("x", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
+    .attr("y", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
     .text(function(d){return d;})
     .call(wrap, cfg.wrapWidth);
 
@@ -168,7 +168,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
   //The radial line function
   var radarLine = d3.svg.line.radial()
     .interpolate("linear-closed")
-    .radius(function(d) { return rScale(d.value); })
+    .radius(d => Number.isFinite(d.value) ? rScaleRangeChecked(d.value) : 1)
     .angle(function(d,i) {	return i*angleSlice; });
 
   if(cfg.roundStrokes) {
@@ -224,7 +224,18 @@ function displayRADAR(id, options, $element, layout, data, self) {
   //Create the outlines
   blobWrapper.append("path")
     .attr("class", "radarStroke")
-    .attr("d", function(d) { return radarLine(d); })
+    .attr("d", function(d) {
+      return radarLine(d);
+
+      // d.map(e => {
+      //   if(!e.value.isNaN()){
+      //     return radarLine(d);
+      //   }
+      // });
+      // if(!d.value.isNaN())
+
+      // return radarLine(d);
+    })
     .style("stroke-width", cfg.strokeWidth + "px")
     .style("stroke", function(d,i) { return cfg.color(i); })
     .style("fill", "none")
@@ -236,8 +247,8 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .enter().append("circle")
     .attr("class", "radarCircle")
     .attr("r", cfg.dotRadius)
-    .attr("cx", function(d,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
-    .attr("cy", function(d,i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
+    .attr("cx", function(d,i){ return rScaleRangeChecked(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
+    .attr("cy", function(d,i){ return rScaleRangeChecked(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
     .style("fill", function(d,i,j) { return cfg.color(j); })
     .style("fill-opacity", 0.8);
 
@@ -257,8 +268,10 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .enter().append("circle")
     .attr("class", "radarInvisibleCircle")
     .attr("r", cfg.dotRadius*1.5)
-    .attr("cx", function(d,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
-    .attr("cy", function(d,i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
+    .attr("cx", function(d,i){
+      return rScaleRangeChecked(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
+    .attr("cy", function(d,i){
+      return rScaleRangeChecked(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
     .style("fill", "none")
     .style("pointer-events", "all")
     .on("mouseover", function(d) {
