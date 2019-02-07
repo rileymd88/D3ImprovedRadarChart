@@ -100,8 +100,8 @@ function convertHYPERCUBEtoJSON(layout) {
     return d[2].qNum;
   }) ;
 
-  const hasInvalidMetricValue = !!metric1Values.find(metricValue => isNaNOrStringNaN(metricValue));
-  const hasInvalidData = hasInvalidMetricValue;
+  const hasOnlyInvalidMetricValue = metric1Values.every(metricValue => isNaNOrStringNaN(metricValue));
+  const hasInvalidData = hasOnlyInvalidMetricValue;
   if (hasInvalidData) {
     return null;
   }
@@ -147,10 +147,7 @@ function convertHYPERCUBEtoJSON(layout) {
     actClassName = dim1Labels[k];
   }
   data[contdata] = myJson;
-  return {
-    data,
-    isValid: true
-  };
+  return data;
 }
 
 export default paint;

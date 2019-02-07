@@ -228,15 +228,6 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .attr("class", "radarStroke")
     .attr("d", function(d) {
       return radarLine(d);
-
-      // d.map(e => {
-      //   if(!e.value.isNaN()){
-      //     return radarLine(d);
-      //   }
-      // });
-      // if(!d.value.isNaN())
-
-      // return radarLine(d);
     })
     .style("stroke-width", cfg.strokeWidth + "px")
     .style("stroke", function(d,i) { return cfg.color(i); })
@@ -314,7 +305,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .text(function(d) { return format(options.numberFormat[0], (minValue + (maxValue - minValue) * d/cfg.levels)*options.numberFormat[1]) + options.numberFormat[2]; });
 
   /////////////////////////////////////////////////////////
-  /////////////////// Helper Function /////////////////////
+  /////////////////// Helper Functions /////////////////////
   /////////////////////////////////////////////////////////
 
   //Taken from http://bl.ocks.org/mbostock/7555321
@@ -344,6 +335,14 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
       }
     });
   }//wrap
+
+  function renderInvalidMessage ($element) {
+    let errorMessage = 'The chart is not displayed because there might be an error with the data or the measure.';
+    let invalidMessageElement = document.createElement('div');
+    invalidMessageElement.className = invalidMessageClassName;
+    invalidMessageElement.innerText = errorMessage;
+    $element.empty().append(invalidMessageElement);
+  }
 
   // on mouseover for the legend symbol
   function cellover(d) {
@@ -489,14 +488,6 @@ Dual licensed under the MIT or GPL Version 2 licenses.
     v[1] = (m[1] && v[1])? Decimal+v[1] : "";
     return (isNegative?'-':'') + v[0] + v[1]; //put back any negation and combine integer and fraction.
   }
-}
-
-function renderInvalidMessage ($element) {
-  let errorMessage = 'The chart is not displayed because there might be an error with the data or the measure.';
-  let invalidMessageElement = document.createElement('div');
-  invalidMessageElement.className = invalidMessageClassName;
-  invalidMessageElement.innerText = errorMessage;
-  $element.empty().append(invalidMessageElement);
 }
   
 export default displayRADAR;
