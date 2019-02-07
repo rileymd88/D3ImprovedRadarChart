@@ -101,14 +101,9 @@ function convertHYPERCUBEtoJSON(layout) {
   }) ;
 
   const hasInvalidMetricValue = !!metric1Values.find(metricValue => isNaNOrStringNaN(metricValue));
-  const hasAllValuesAsZeros = metric1Values.every(metricValue => metricValue === 0);
-  const hasInvalidData = hasInvalidMetricValue || hasAllValuesAsZeros;
+  const hasInvalidData = hasInvalidMetricValue;
   if (hasInvalidData) {
-    return {
-      hasInvalidMetricValue,
-      hasAllValuesAsZeros,
-      isValid: false
-    };
+    return null;
   }
   
   // create a JSON array that contains dimensions and metric values

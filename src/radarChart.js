@@ -11,10 +11,10 @@ import 'd3-svg-legend';
 
 const invalidMessageClassName = 'invalid-visualisation-message';
 
-function displayRADAR(className, options, $element, layout, input, self) {
-  const isInvalidVisualisation = !input.isValid;
+function displayRADAR(className, options, $element, layout, inputData, self) {
+  const isInvalidVisualisation = !inputData;
   if (isInvalidVisualisation) {
-    renderInvalidMessage($element, input);
+    renderInvalidMessage($element);
     return;
   }
 
@@ -35,7 +35,7 @@ function displayRADAR(className, options, $element, layout, input, self) {
   };
 
   // Convert the nested data passed in into an array of values arrays
-  var data = input.data.map(function(d) { return d.definition; });
+  var data = inputData.map(function(d) { return d.definition; });
 
   // Put all of the options into a variable called cfg
   if('undefined' !== typeof options){
@@ -492,14 +492,8 @@ Dual licensed under the MIT or GPL Version 2 licenses.
   }
 }
 
-function renderInvalidMessage ($element, { hasInvalidMetricValue, hasAllValuesAsZeros }) {
-  let errorMessage = '';
-  if (hasInvalidMetricValue) {
-    errorMessage = 'The chart is not displayed because there might be an error with the data or the measure.';
-  }
-  if (hasAllValuesAsZeros) {
-    errorMessage = 'The chart is not displayed because there are only zero values.';
-  }
+function renderInvalidMessage ($element) {
+  let errorMessage = 'The chart is not displayed because there might be an error with the data or the measure.';
   let invalidMessageElement = document.createElement('div');
   invalidMessageElement.className = invalidMessageClassName;
   invalidMessageElement.innerText = errorMessage;
