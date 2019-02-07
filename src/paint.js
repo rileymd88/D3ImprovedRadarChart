@@ -141,6 +141,17 @@ function convertHYPERCUBEtoJSON(layout) {
     return d[2].qNum;
   }) ;
 
+  const hasInvalidMetricValue = !!metric1Values.find(metricValue => isNaNOrStringNaN(metricValue));
+  const hasAllValuesAsZeros = metric1Values.every(metricValue => metricValue === 0);
+  const hasInvalidData = hasInvalidMetricValue || hasAllValuesAsZeros;
+  if (hasInvalidData) {
+    return {
+      hasInvalidMetricValue,
+      hasAllValuesAsZeros,
+      isValid: false
+    };
+  }
+  
   // create a JSON array that contains dimensions and metric values
   var data = [];
   var actClassName = "";
@@ -182,7 +193,18 @@ function convertHYPERCUBEtoJSON(layout) {
     actClassName = dim1Labels[k];
   }
   data[contdata] = myJson;
-  return data;
+  return {
+    data,
+    isValid: true
+  };
 }
 
 export default paint;
+
+function isNaNOrStringNaN (input) {
+  if (!input) {
+    return false;
+  }
+  return isNaN(input) || input === 'NaN';
+}
+

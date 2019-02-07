@@ -9,7 +9,15 @@ import $ from 'jquery';
 import d3 from 'd3';
 import 'd3-svg-legend';
 
-function displayRADAR(id, options, $element, layout, data, self) {
+const invalidMessageClassName = 'invalid-visualisation-message';
+
+function displayRADAR(className, options, $element, layout, input, self) {
+  const isInvalidVisualisation = !input.isValid;
+  if (isInvalidVisualisation) {
+    renderInvalidMessage($element, input);
+    return;
+  }
+
   var cfg = {
     size: { width: 450, height: 450 },											//Width and Height of the circle
     margin: { top: 100, right: 100, bottom: 100, left: 100 }, 					//The margins around the circle
@@ -489,4 +497,18 @@ Dual licensed under the MIT or GPL Version 2 licenses.
   }
 }
 
+function renderInvalidMessage ($element, { hasInvalidMetricValue, hasAllValuesAsZeros }) {
+  let errorMessage = '';
+  if (hasInvalidMetricValue) {
+    errorMessage = 'The chart is not displayed because there might be an error with the data or the measure.';
+  }
+  if (hasAllValuesAsZeros) {
+    errorMessage = 'The chart is not displayed because there are only zero values.';
+  }
+  let invalidMessageElement = document.createElement('div');
+  invalidMessageElement.className = invalidMessageClassName;
+  invalidMessageElement.innerText = errorMessage;
+  $element.empty().append(invalidMessageElement);
+}
+  
 export default displayRADAR;
