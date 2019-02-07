@@ -80,18 +80,14 @@ function displayRADAR(className, options, $element, layout, input, self) {
   //Remove whatever chart with the same id/class was present before
   d3.select(id).select("svg").remove();
 
-  // Chart object id
-  var id = "container_" + layout.qInfo.qId;
+  const chartContainerElementId = "container_" + layout.qInfo.qId;
+ 
+  $element.empty()
+    .append(
+      $('<div />').attr("id", chartContainerElementId).width(cfg.size.width).height(cfg.size.height)
+    );
+  
 
-  // Check to see if the chart element has already been created
-  if (document.getElementById(id)) {
-    // if it has been created, empty its contents so we can redraw it
-    $("#" + id).empty();
-  }
-  else {
-    // if it hasn't been created, create it with the appropiate id and size
-    $element.append($('<div />').attr("id", id).width(cfg.size.width).height(cfg.size.height));
-  }
   var svg = d3.select("#" + id).append("svg")
     .attr("width", cfg.size.width)
     .attr("height", cfg.size.height)
