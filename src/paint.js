@@ -27,7 +27,6 @@ function paint ($element, layout) {
     labelFactor: 1.02, 																			//How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 50, 																				//The number of pixels after which a label needs to be given a new line
     strokeWidth: 2.8, 																			//The width of the stroke around each blob
-    //sortingCheck: checkSORTING(layout),															//The sorting configuration
     legendDisplay: layout.showLegend,															//Display the legend
     numberFormat: getFORMAT(layout)																//Format for number
   };
@@ -72,48 +71,8 @@ function getFORMAT(layout) {
   return result;
 }
 
-/*function checkSORTING(layout) {
-  var result = [];
-
-  // Detect if sorting is correct
-  if((layout.qHyperCube.qEffectiveInterColumnSortOrder[0] == 0) && (layout.qHyperCube.qEffectiveInterColumnSortOrder[1] == 1)) { result[0] = true; } else { result[0] = false; }
-
-  // Detect the browser language
-  switch (navigator.language.toUpperCase().split("-")[0]) {
-    case "FR":
-      result[1] = "Veuillez trier les dimensions et les mesures comme décrit ci-après :";				//FRENCH
-      break;
-    case "DE":
-      result[1] = "Sie ordnen die Abmessungen und die Maßnahmen, wie nachstehend beschrieben :";		//GERMAN
-      break;
-    case "ES":
-      result[1] = "Por favor, ordenar las dimensiones y medidas como se describe a continuación :";	//SPANISH
-      break;
-    default:
-      result[1] = "Please sort the dimensions and measures as described below :";						//ENGLISH
-      break;
-  }
-
-  // Build the  message
-  if(layout.qHyperCube.qSize.qcx == 3) {
-    result[2] = '<div style="position:relative; top:45%; text-align:center; font-size:15px">' + result[1] + '<p style="position:relative; padding-left:44%; text-align:left; font-size:14px"> 1. > &nbsp;' + layout.qHyperCube.qDimensionInfo[0].qFallbackTitle + "<br/> 2. > &nbsp;" + layout.qHyperCube.qDimensionInfo[1].qFallbackTitle + "<br/> 3. > &nbsp;" + layout.qHyperCube.qMeasureInfo[0].qFallbackTitle + '</p></div>';
-  } else {
-    result[2] = '<div style="position:relative; top:45%; text-align:center; font-size:15px">' + result[1] + '<p style="position:relative; padding-left:44%; text-align:left; font-size:14px"> 1. > &nbsp;' + layout.qHyperCube.qDimensionInfo[0].qFallbackTitle + "<br/> 2. > &nbsp;" + layout.qHyperCube.qMeasureInfo[0].qFallbackTitle + '</p></div>';
-  }
-
-  // Language detected
-  result[1] = navigator.language.toUpperCase().split("-")[0];
-
-  return result;
-}*/
-
 function convertHYPERCUBEtoJSON(layout) {
-// get qMatrix data array
   var qMatrix = layout.qHyperCube.qDataPages[0].qMatrix;
-
-  // create a new array that contains the measure labels
-
-  // create a new array that contains the dimensions and metric values
 
   var dim1Labels = qMatrix.map(function(d) {
     return d[0].qText;

@@ -31,20 +31,18 @@ function displayRADAR(className, options, $element, layout, input, self) {
     labelFactor: 1.25, 															//How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 100, 															//The number of pixels after which a label needs to be given a new line
     strokeWidth: 1.5, 															//The width of the stroke around each blob
-    //sortingCheck: [true],														//The sorting configuration
     legendDisplay: true															//Display the legend
   };
 
-  //Convert the nested data passed in
-  //into an array of values arrays
-  var data = data.map(function(d) { return d.definition; });
+  // Convert the nested data passed in into an array of values arrays
+  var data = input.data.map(function(d) { return d.definition; });
 
-  //Put all of the options into a variable called cfg
+  // Put all of the options into a variable called cfg
   if('undefined' !== typeof options){
     for(var i in options){
       if('undefined' !== typeof options[i]){ cfg[i] = options[i]; }
-    }//for i
-  }//if
+    }
+  }
 
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
   var maxValue = Math.max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}));}));
@@ -73,12 +71,13 @@ function displayRADAR(className, options, $element, layout, input, self) {
     .domain([minValue, maxValue]);
 
   const rScaleRangeChecked = value => Number.isFinite(value) ? rScale(value) : 0;
+  
   /////////////////////////////////////////////////////////
   //////////// Create the container SVG and g /////////////
   /////////////////////////////////////////////////////////
 
   //Remove whatever chart with the same id/class was present before
-  d3.select(id).select("svg").remove();
+  d3.select(className).select("svg").remove();
 
   const chartContainerElementId = "container_" + layout.qInfo.qId;
  
@@ -88,7 +87,7 @@ function displayRADAR(className, options, $element, layout, input, self) {
     );
   
 
-  var svg = d3.select("#" + id).append("svg")
+  var svg = d3.select("#" + chartContainerElementId).append("svg")
     .attr("width", cfg.size.width)
     .attr("height", cfg.size.height)
     .classed("in-edit-mode", self._inEditState);
@@ -192,7 +191,7 @@ function displayRADAR(className, options, $element, layout, input, self) {
     .style("fill-opacity", cfg.colorOpacity.area)
     .on('mouseover', function (){
       // Make cursor pointer when hovering over blob
-      $("#"+id).css('cursor','pointer');
+      $("#"+chartContainerElementId).css('cursor','pointer');
 
       //Dim all blobs
       d3.selectAll(".radarArea")
@@ -212,12 +211,12 @@ function displayRADAR(className, options, $element, layout, input, self) {
       });
       if(!isNull){
         // Select Value
-        self.backendApi.selectValues(0, [d[0].radar_area_id], true);
+        self.backendApi.selectValues(0, [d[0].radar_areaclassName], true);
       }
     })
     .on('mouseout', function(){
       // keep mouse cursor arrow instead of text select (auto)
-      $("#"+id).css('cursor','default');
+      $("#"+chartContainerElementId).css('cursor','default');
 
       //Bring back all blobs
       d3.selectAll(".radarArea")
@@ -349,7 +348,7 @@ function displayRADAR(className, options, $element, layout, input, self) {
 
   // on mouseover for the legend symbol
   function cellover(d) {
-    $("#"+id).css('cursor','pointer');
+    $("#"+chartContainerElementId).css('cursor','pointer');
 
     //Dim all blobs
     d3.selectAll(".radarArea")
@@ -364,7 +363,7 @@ function displayRADAR(className, options, $element, layout, input, self) {
 
   // on mouseclick for the legend symbol
   function cellclick(d) {
-    $("#"+id).css('cursor','default');
+    $("#"+chartContainerElementId).css('cursor','default');
 
     //Bring back all blobs
     var isNull = false;
@@ -379,13 +378,13 @@ function displayRADAR(className, options, $element, layout, input, self) {
         .style("fill-opacity", 0.9);
 
       // Select Value
-      self.backendApi.selectValues(0, [data[d][0].radar_area_id], true);
+      self.backendApi.selectValues(0, [data[d][0].radar_areaclassName], true);
     }
   }
 
   // on mouseout for the legend symbol
   function cellout() {
-    $("#"+id).css('cursor','default');
+    $("#"+chartContainerElementId).css('cursor','default');
 
     //Bring back all blobs
     d3.selectAll(".radarArea")
