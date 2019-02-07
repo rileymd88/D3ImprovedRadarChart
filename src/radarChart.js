@@ -182,9 +182,8 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   //Append the backgrounds
   blobWrapper
     .append("path")
-  //.attr("class", "radarArea")
     .attr("class", function(d) {
-      return "radarArea" + " c" + d[0].radar_area.replace(/\s+/g, ''); //Remove spaces from the .radar_area string to make one valid class name
+      return "radarArea" + " c" + getValidCssClassName(d[0].radar_area);
     })
     .attr("d", function(d) { return radarLine(d); })
     .style("fill", function(d,i) { return cfg.color(i); })
@@ -356,7 +355,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
       .style("fill-opacity", cfg.colorOpacity.area_out);
 
     //Bring back the hovered over blob
-    d3.select(".c" + data[d][0].radar_area.replace(/\s+/g, ''))
+    d3.select(".c" + getValidCssClassName(data[d][0].radar_area))
       .transition().duration(200)
       .style("fill-opacity", cfg.colorOpacity.area_over);
   }
@@ -501,3 +500,10 @@ function renderInvalidMessage ($element) {
 }
   
 export default displayRADAR;
+
+export function getValidCssClassName (input) {
+  if (!input) {
+    return '';
+  }
+  return input.replace(/\s|\/|:/g, '');
+}
