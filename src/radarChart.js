@@ -9,7 +9,15 @@ import $ from 'jquery';
 import d3 from 'd3';
 import 'd3-svg-legend';
 
-function displayRADAR(id, options, $element, layout, data, self) {
+const invalidMessageClassName = 'invalid-visualisation-message';
+
+function displayRADAR(className, options, $element, layout, inputData, self) {
+  const isInvalidVisualisation = !inputData;
+  if (isInvalidVisualisation) {
+    renderInvalidMessage($element);
+    return;
+  }
+
   var cfg = {
     size: { width: 450, height: 450 },											//Width and Height of the circle
     margin: { top: 100, right: 100, bottom: 100, left: 100 }, 					//The margins around the circle
@@ -23,20 +31,18 @@ function displayRADAR(id, options, $element, layout, data, self) {
     labelFactor: 1.25, 															//How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 100, 															//The number of pixels after which a label needs to be given a new line
     strokeWidth: 1.5, 															//The width of the stroke around each blob
-    //sortingCheck: [true],														//The sorting configuration
     legendDisplay: true															//Display the legend
   };
 
-  //Convert the nested data passed in
-  //into an array of values arrays
-  var data = data.map(function(d) { return d.definition; });
+  // Convert the nested data passed in into an array of values arrays
+  var data = inputData.map(function(d) { return d.definition; });
 
-  //Put all of the options into a variable called cfg
+  // Put all of the options into a variable called cfg
   if('undefined' !== typeof options){
     for(var i in options){
       if('undefined' !== typeof options[i]){ cfg[i] = options[i]; }
-    }//for i
-  }//if
+    }
+  }
 
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
   var maxValue = Math.max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}));}));
@@ -65,26 +71,23 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .domain([minValue, maxValue]);
 
   const rScaleRangeChecked = value => Number.isFinite(value) ? rScale(value) : 0;
+  
   /////////////////////////////////////////////////////////
   //////////// Create the container SVG and g /////////////
   /////////////////////////////////////////////////////////
 
   //Remove whatever chart with the same id/class was present before
-  d3.select(id).select("svg").remove();
+  d3.select(className).select("svg").remove();
 
-  // Chart object id
-  var id = "container_" + layout.qInfo.qId;
+  const chartContainerElementId = "container_" + layout.qInfo.qId;
+ 
+  $element.empty()
+    .append(
+      $('<div />').attr("id", chartContainerElementId).width(cfg.size.width).height(cfg.size.height)
+    );
+  
 
-  // Check to see if the chart element has already been created
-  if (document.getElementById(id)) {
-    // if it has been created, empty its contents so we can redraw it
-    $("#" + id).empty();
-  }
-  else {
-    // if it hasn't been created, create it with the appropiate id and size
-    $element.append($('<div />').attr("id", id).width(cfg.size.width).height(cfg.size.height));
-  }
-  var svg = d3.select("#" + id).append("svg")
+  var svg = d3.select("#" + chartContainerElementId).append("svg")
     .attr("width", cfg.size.width)
     .attr("height", cfg.size.height)
     .classed("in-edit-mode", self._inEditState);
@@ -179,16 +182,15 @@ function displayRADAR(id, options, $element, layout, data, self) {
   //Append the backgrounds
   blobWrapper
     .append("path")
-  //.attr("class", "radarArea")
     .attr("class", function(d) {
-      return "radarArea" + " c" + d[0].radar_area.replace(/\s+/g, ''); //Remove spaces from the .radar_area string to make one valid class name
+      return "radarArea" + " c" + getValidCssClassName(d[0].radar_area);
     })
     .attr("d", function(d) { return radarLine(d); })
     .style("fill", function(d,i) { return cfg.color(i); })
     .style("fill-opacity", cfg.colorOpacity.area)
     .on('mouseover', function (){
       // Make cursor pointer when hovering over blob
-      $("#"+id).css('cursor','pointer');
+      $("#"+chartContainerElementId).css('cursor','pointer');
 
       //Dim all blobs
       d3.selectAll(".radarArea")
@@ -213,7 +215,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     })
     .on('mouseout', function(){
       // keep mouse cursor arrow instead of text select (auto)
-      $("#"+id).css('cursor','default');
+      $("#"+chartContainerElementId).css('cursor','default');
 
       //Bring back all blobs
       d3.selectAll(".radarArea")
@@ -226,15 +228,6 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .attr("class", "radarStroke")
     .attr("d", function(d) {
       return radarLine(d);
-
-      // d.map(e => {
-      //   if(!e.value.isNaN()){
-      //     return radarLine(d);
-      //   }
-      // });
-      // if(!d.value.isNaN())
-
-      // return radarLine(d);
     })
     .style("stroke-width", cfg.strokeWidth + "px")
     .style("stroke", function(d,i) { return cfg.color(i); })
@@ -312,7 +305,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
     .text(function(d) { return format(options.numberFormat[0], (minValue + (maxValue - minValue) * d/cfg.levels)*options.numberFormat[1]) + options.numberFormat[2]; });
 
   /////////////////////////////////////////////////////////
-  /////////////////// Helper Function /////////////////////
+  /////////////////// Helper Functions /////////////////////
   /////////////////////////////////////////////////////////
 
   //Taken from http://bl.ocks.org/mbostock/7555321
@@ -343,9 +336,17 @@ function displayRADAR(id, options, $element, layout, data, self) {
     });
   }//wrap
 
+  function renderInvalidMessage ($element) {
+    let errorMessage = 'The chart is not displayed because there might be an error with the data or the measure.';
+    let invalidMessageElement = document.createElement('div');
+    invalidMessageElement.className = invalidMessageClassName;
+    invalidMessageElement.innerText = errorMessage;
+    $element.empty().append(invalidMessageElement);
+  }
+
   // on mouseover for the legend symbol
   function cellover(d) {
-    $("#"+id).css('cursor','pointer');
+    $("#"+chartContainerElementId).css('cursor','pointer');
 
     //Dim all blobs
     d3.selectAll(".radarArea")
@@ -353,14 +354,14 @@ function displayRADAR(id, options, $element, layout, data, self) {
       .style("fill-opacity", cfg.colorOpacity.area_out);
 
     //Bring back the hovered over blob
-    d3.select(".c" + data[d][0].radar_area.replace(/\s+/g, ''))
+    d3.select(".c" + getValidCssClassName(data[d][0].radar_area))
       .transition().duration(200)
       .style("fill-opacity", cfg.colorOpacity.area_over);
   }
 
   // on mouseclick for the legend symbol
   function cellclick(d) {
-    $("#"+id).css('cursor','default');
+    $("#"+chartContainerElementId).css('cursor','default');
 
     //Bring back all blobs
     var isNull = false;
@@ -381,7 +382,7 @@ function displayRADAR(id, options, $element, layout, data, self) {
 
   // on mouseout for the legend symbol
   function cellout() {
-    $("#"+id).css('cursor','default');
+    $("#"+chartContainerElementId).css('cursor','default');
 
     //Bring back all blobs
     d3.selectAll(".radarArea")
@@ -488,5 +489,12 @@ Dual licensed under the MIT or GPL Version 2 licenses.
     return (isNegative?'-':'') + v[0] + v[1]; //put back any negation and combine integer and fraction.
   }
 }
-
+  
 export default displayRADAR;
+
+export function getValidCssClassName (input) {
+  if (!input) {
+    return '';
+  }
+  return input.replace(/\s|\/|:/g, '');
+}
