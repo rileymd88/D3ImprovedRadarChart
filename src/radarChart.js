@@ -210,7 +210,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
       });
       if(!isNull){
         // Select Value
-        self.backendApi.selectValues(0, [d[0].radar_areaclassName], true);
+        self.backendApi.selectValues(0, [d[0].radar_area_id], true);
       }
     })
     .on('mouseout', function(){
@@ -376,7 +376,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
         .style("fill-opacity", 0.9);
 
       // Select Value
-      self.backendApi.selectValues(0, [data[d][0].radar_areaclassName], true);
+      self.backendApi.selectValues(0, [data[d][0].radar_area_id], true);
     }
   }
 
