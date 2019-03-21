@@ -87,7 +87,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     );
   
 
-  var svg = d3.select("#" + chartContainerElementId).append("svg")
+  var svg = d3.select(`#${chartContainerElementId}`).append("svg")
     .attr("width", cfg.size.width)
     .attr("height", cfg.size.height)
     .classed("in-edit-mode", self._inEditState);
@@ -190,10 +190,10 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .style("fill-opacity", cfg.colorOpacity.area)
     .on('mouseover', function (){
       // Make cursor pointer when hovering over blob
-      $("#"+chartContainerElementId).css('cursor','pointer');
+      $(`#${chartContainerElementId}`).css('cursor','pointer');
 
       //Dim all blobs
-      d3.selectAll(".radarArea")
+      d3.selectAll(`#${chartContainerElementId} .radarArea`)
         .transition().duration(200)
         .style("fill-opacity", cfg.colorOpacity.area_out);
       //Bring back the hovered over blob
@@ -218,7 +218,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
       $("#"+chartContainerElementId).css('cursor','default');
 
       //Bring back all blobs
-      d3.selectAll(".radarArea")
+      d3.selectAll(`#${chartContainerElementId} .radarArea`)
         .transition().duration(200)
         .style("fill-opacity", cfg.colorOpacity.area);
     });
@@ -346,15 +346,15 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
 
   // on mouseover for the legend symbol
   function cellover(d) {
-    $("#"+chartContainerElementId).css('cursor','pointer');
+    $(`#${chartContainerElementId}`).css('cursor','pointer');
 
     //Dim all blobs
-    d3.selectAll(".radarArea")
+    d3.selectAll(`#${chartContainerElementId} .radarArea`)
       .transition().duration(200)
       .style("fill-opacity", cfg.colorOpacity.area_out);
 
     //Bring back the hovered over blob
-    d3.select(".c" + getValidCssClassName(data[d][0].radar_area))
+    d3.select(`#${chartContainerElementId} .c` + getValidCssClassName(data[d][0].radar_area))
       .transition().duration(200)
       .style("fill-opacity", cfg.colorOpacity.area_over);
   }
@@ -371,7 +371,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
       }
     });
     if(!isNull) {
-      d3.selectAll(".radarArea")
+      d3.selectAll(`#${chartContainerElementId} .radarArea`)
         .transition().duration(200)
         .style("fill-opacity", 0.9);
 
@@ -385,7 +385,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     $("#"+chartContainerElementId).css('cursor','default');
 
     //Bring back all blobs
-    d3.selectAll(".radarArea")
+    d3.selectAll(`#${chartContainerElementId} .radarArea`)
       .transition().duration(200)
       .style("fill-opacity", cfg.colorOpacity.area);
   }
