@@ -254,6 +254,26 @@ export default {
             }
           }
         }
+      },
+      about: {
+        component: 'items',
+        label: 'About',
+        items: {
+          header: {
+            label: 'Radar chart',
+            style: 'header',
+            component: 'text'
+          },
+          paragraph1: {
+            label: `Radar chart is a two-dimensional chart that uses radical axes to show the 
+              scoring of a measure in one dimension over another.`,
+            component: 'text'
+          },
+          paragraph2: {
+            label: 'Radar chart is based upon an extension created by Brian Booden and VizMatt.',
+            component: 'text'
+          }
+        }
       }
     }
   },
