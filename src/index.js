@@ -278,7 +278,7 @@ export default {
     }
   },
   snapshot: {
-    canTakeSnapshot: false
+    canTakeSnapshot: true
   },
   paint: paint
 };
