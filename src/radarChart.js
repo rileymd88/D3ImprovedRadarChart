@@ -97,18 +97,6 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .attr("transform", "translate(" + (cfg.size.width/2) + "," + (cfg.size.height/2) + ")");
 
   /////////////////////////////////////////////////////////
-  ////////// Glow filter for some extra pizzazz ///////////
-  /////////////////////////////////////////////////////////
-
-  //Filter for the outside glow
-  g.append('defs')
-    .append('filter').attr('id','glow')
-    .append('feGaussianBlur').attr('stdDeviation','2.5').attr('result','coloredBlur')
-    .append('feMerge')
-    .append('feMergeNode').attr('in','coloredBlur')
-    .append('feMergeNode').attr('in','SourceGraphic');
-
-  /////////////////////////////////////////////////////////
   /////////////// Draw the Circular grid //////////////////
   /////////////////////////////////////////////////////////
 
