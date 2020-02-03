@@ -97,18 +97,6 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .attr("transform", "translate(" + (cfg.size.width/2) + "," + (cfg.size.height/2) + ")");
 
   /////////////////////////////////////////////////////////
-  ////////// Glow filter for some extra pizzazz ///////////
-  /////////////////////////////////////////////////////////
-
-  //Filter for the outside glow
-  g.append('defs')
-    .append('filter').attr('id','glow')
-    .append('feGaussianBlur').attr('stdDeviation','2.5').attr('result','coloredBlur')
-    .append('feMerge')
-    .append('feMergeNode').attr('in','coloredBlur')
-    .append('feMergeNode').attr('in','SourceGraphic');
-
-  /////////////////////////////////////////////////////////
   /////////////// Draw the Circular grid //////////////////
   /////////////////////////////////////////////////////////
 
@@ -130,8 +118,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .attr("r", function(d){return radius/cfg.levels*d;})
     .style("fill", "#CDCDCD")
     .style("stroke", "#CDCDCD")
-    .style("fill-opacity", cfg.colorOpacity.circle)
-    .style("filter" , "url(#glow)");
+    .style("fill-opacity", cfg.colorOpacity.circle);
 
   /////////////////////////////////////////////////////////
   //////////////////// Draw the axes //////////////////////
@@ -231,8 +218,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     })
     .style("stroke-width", cfg.strokeWidth + "px")
     .style("stroke", function(d,i) { return cfg.color(i); })
-    .style("fill", "none")
-    .style("filter" , "url(#glow)");
+    .style("fill", "none");
 
   //Append the circles
   blobWrapper.selectAll(".radarCircle")
