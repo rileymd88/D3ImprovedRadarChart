@@ -195,7 +195,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
           isNull = true;
         }
       });
-      if(!isNull){
+      if(!isNull && self.options.noInteraction !== true){
         // Select Value
         self.backendApi.selectValues(0, [d[0].radar_area_id], true);
       }
@@ -356,7 +356,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
         isNull = true;
       }
     });
-    if(!isNull) {
+    if(!isNull && self.options.noInteraction !== true) {
       d3.selectAll(`#${chartContainerElementId} .radarArea`)
         .transition().duration(200)
         .style("fill-opacity", 0.9);
