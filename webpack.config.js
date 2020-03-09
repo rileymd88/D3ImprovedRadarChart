@@ -4,7 +4,7 @@ const path = require('path');
 
 const DIST = path.resolve("./dist");
 const MODE = process.env.NODE_ENV || 'development';
-const SOURCE_MAP = 'sourec-map';
+const SOURCE_MAP = 'source-map';
 const DEVTOOL = (process.env.NODE_ENV === 'development') ? SOURCE_MAP : false;
 
 console.log('Webpack mode:', MODE); // eslint-disable-line no-console
