@@ -136,7 +136,7 @@ function convertHYPERCUBEtoJSON(layout) {
     }
 
     // Check if null
-    if (row[0].qIsNull) {
+    if (row[0].qIsNull && typeof dim2Indecies[row[1].qElemNumber] !== "undefined") {
       structure[dim1Indecies[row[0].qElemNumber]].definition[
         dim2Indecies[row[1].qElemNumber]
       ].dim1IsNull = true;
