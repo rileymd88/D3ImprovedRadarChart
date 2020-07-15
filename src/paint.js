@@ -53,14 +53,13 @@ function getFORMAT(layout) {
     var formatType = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qType;
     var formatDefinition = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qFmt;
     var decSeparator = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qDec;
-    var thouSeparator = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qThou;
     var formatPrecision = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qFmt
       .replace(/%/g, "")
       .trim();
 
     if (formatType == "F") {
       // Format "Number"
-      if (formatDefinition === "#" + thouSeparator + "##0") {
+      if (formatDefinition.indexOf(decSeparator) === -1) {
         result[0] = formatDefinition + decSeparator;
       } else {
         result[0] = formatPrecision;
