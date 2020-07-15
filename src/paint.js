@@ -52,19 +52,17 @@ function getFORMAT(layout) {
   if (typeof layout.qHyperCube.qMeasureInfo[0].qNumFormat.qFmt != "undefined") {
     var formatType = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qType;
     var formatDefinition = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qFmt;
+    var decSeparator = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qDec;
     var formatPrecision = layout.qHyperCube.qMeasureInfo[0].qNumFormat.qFmt
       .replace(/%/g, "")
       .trim();
 
     if (formatType == "F") {
       // Format "Number"
-      switch (formatDefinition) {
-        case "# ##0":
-          result[0] = "# ##0,";
-          break;
-        default:
-          result[0] = formatPrecision;
-          break;
+      if (formatDefinition.indexOf(decSeparator) === -1) {
+        result[0] = formatDefinition + decSeparator;
+      } else {
+        result[0] = formatPrecision;
       }
     }
 
