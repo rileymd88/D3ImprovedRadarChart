@@ -651,5 +651,5 @@ export function getValidCssClassName(input) {
   if (!input) {
     return "";
   }
-  return input.replace(/\s|\/|:|'|\.|\(|\)|#|@|\*|\[|\]|!|%|&|{|}|,|;|\?|`|\^|\<|\||\=|\$/g, "");
+  return input.replace(/\s|\/|:|'|\.|\(|\)|#|@|\*|\[|\]|!|%|&|{|}|,|;|\?|`|\^|\<|\||\=|\$|"|\+|\>|\\|~/g, "");
 }
