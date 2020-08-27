@@ -113,6 +113,9 @@ export default {
             items: {
               numberFormatting: {
                 items: {
+                  numberFormattingMode: {
+                    show: false
+                  },
                   numberFormattingType: {
                     options: function() {
                       return [
