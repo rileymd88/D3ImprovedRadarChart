@@ -18,25 +18,25 @@ if (!window._babelPolyfill) { //eslint-disable-line no-underscore-dangle
 
 /* eslint-disable max-len */
 const COLOR_SCALES = Object.freeze({
-  SEQUENTIAL:           Object.freeze(["#FEE391", "#FEC44F", "#FE9929", "#EC7014", "#CC4C02", "#993404", "#662506"]),
-  SEQUENTIAL_REVERSE:   Object.freeze(["#662506", "#993404", "#CC4C02", "#EC7014", "#FE9929", "#FEC44F", "#FEE391"]),
-  DIVERGING_RDYLBU:     Object.freeze(["#D73027", "#F46D43", "#FEE090", "#ABD9E9", "#74ADD1", "#4575B4"]),
-  DIVERGING_BUYLRD:     Object.freeze(["#D73027", "#FDAE61", "#ABD9E9", "#4575B4"]),
-  BLUES:                Object.freeze(["#DEEBf7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]),
-  REDS:                 Object.freeze(["#FEE0D2", "#FCBBa1", "#FC9272", "#FB6A4A", "#EF3B2C", "#CB181D", "#A50F15", "#67000D"]),
-  YLGNBU:               Object.freeze(["#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494" ,"#081D58"]),
-  TWELVE_COLORS:        Object.freeze(["#332288", "#6699CC", "#88CCEE" ,"#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#AA4466", "#882255", "#AA4499"]),
-  TWELVE_COLORS_REVERSE:Object.freeze(["#332288", "#6699CC", "#88CCEE" ,"#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#AA4466", "#882255", "#AA4499"].reverse()),
-  BLUE_PURPLE:          Object.freeze(["#1ABC9C", "#7F8C8D", "#2ECC71", "#BDC3C7", "#3498DB", "#C0392B", "#9B59B6", "#D35400", "#34495E", "#F39C12", "#16A085", "#95A5A6"]),
-  BREEZE:               Object.freeze([ "#138185", "#26A0A7", "#65D3DA", "#79D69F", "#70BA6E", "#CBE989", "#EBF898", "#F9EC86", "#FAD144", "#EC983D", "#D76C6C", "#A54343" ])
+  SEQUENTIAL: Object.freeze(["#FEE391", "#FEC44F", "#FE9929", "#EC7014", "#CC4C02", "#993404", "#662506"]),
+  SEQUENTIAL_REVERSE: Object.freeze(["#662506", "#993404", "#CC4C02", "#EC7014", "#FE9929", "#FEC44F", "#FEE391"]),
+  DIVERGING_RDYLBU: Object.freeze(["#D73027", "#F46D43", "#FEE090", "#ABD9E9", "#74ADD1", "#4575B4"]),
+  DIVERGING_BUYLRD: Object.freeze(["#D73027", "#FDAE61", "#ABD9E9", "#4575B4"]),
+  BLUES: Object.freeze(["#DEEBf7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]),
+  REDS: Object.freeze(["#FEE0D2", "#FCBBa1", "#FC9272", "#FB6A4A", "#EF3B2C", "#CB181D", "#A50F15", "#67000D"]),
+  YLGNBU: Object.freeze(["#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"]),
+  TWELVE_COLORS: Object.freeze(["#332288", "#6699CC", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#AA4466", "#882255", "#AA4499"]),
+  TWELVE_COLORS_REVERSE: Object.freeze(["#332288", "#6699CC", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#661100", "#CC6677", "#AA4466", "#882255", "#AA4499"].reverse()),
+  BLUE_PURPLE: Object.freeze(["#1ABC9C", "#7F8C8D", "#2ECC71", "#BDC3C7", "#3498DB", "#C0392B", "#9B59B6", "#D35400", "#34495E", "#F39C12", "#16A085", "#95A5A6"]),
+  BREEZE: Object.freeze(["#138185", "#26A0A7", "#65D3DA", "#79D69F", "#70BA6E", "#CBE989", "#EBF898", "#F9EC86", "#FAD144", "#EC983D", "#D76C6C", "#A54343"])
 });
 /* eslint-enable max-len */
 
 function setDimensionLimit(handler) {
   var dims = handler.getDimensions();
-  if(dims && dims.length) {
-    dims.forEach(function(d, i){
-      if(i === 1) {
+  if (dims && dims.length) {
+    dims.forEach(function(d, i) {
+      if (i === 1) {
         d.qOtherTotalSpec.qOtherMode = 'OTHER_COUNTED';
         d.qOtherTotalSpec.qOtherCounted = { qv: '20' };
       } else {
@@ -53,7 +53,7 @@ function setInitialSort(props) {
   const dims = props.qHyperCubeDef.qDimensions;
   const measures = props.qHyperCubeDef.qMeasures;
   if (dims.length === 2 && measures.length === 1) {
-    props.qHyperCubeDef.qInterColumnSortOrder = [0,1,2];
+    props.qHyperCubeDef.qInterColumnSortOrder = [0, 1, 2];
   }
 }
 
@@ -80,7 +80,7 @@ export default {
         setDimensionLimit(handler);
       },
       move(dimension, props, handler) {
-        setDimensionLimit( handler);
+        setDimensionLimit(handler);
         setInitialSort(props);
       },
       replace(dimension, old, index, props, handler) {
@@ -91,7 +91,7 @@ export default {
     measures: {
       min: 1,
       max: 1
-    }
+    },
   },
   support: {
     snapshot: true,
@@ -109,7 +109,27 @@ export default {
             disabledRef: ""
           },
           measures: {
-            disabledRef: ""
+            disabledRef: "",
+            items: {
+              numberFormatting: {
+                items: {
+                  numberFormattingType: {
+                    options: function() {
+                      return [
+                        {
+                          value: "U",
+                          translation: "Common.Auto"
+                        },
+                        {
+                          value: "F",
+                          translation: "properties.numberFormatting.types.number"
+                        },
+                      ];
+                    }
+                  },
+                }
+              }
+            }
           }
         }
       },
@@ -156,7 +176,7 @@ export default {
                 type: "number",
                 expression: "optional",
                 defaultValue: 1,
-                show: function( data ) {
+                show: function(data) {
                   return data.range === false;
                 }
               },
@@ -165,7 +185,7 @@ export default {
                 type: "number",
                 expression: "optional",
                 defaultValue: 0,
-                show: function( data ) {
+                show: function(data) {
                   return data.range === false;
                 }
               },
@@ -265,7 +285,7 @@ export default {
             component: 'text'
           },
           paragraph1: {
-            label: `Radar chart is a two-dimensional chart that uses radical axes to show the 
+            label: `Radar chart is a two-dimensional chart that uses radical axes to show the
               scoring of a measure in one dimension over another.`,
             component: 'text'
           },
