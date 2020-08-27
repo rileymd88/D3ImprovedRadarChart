@@ -35,7 +35,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   };
 
   // Convert the nested data passed in into an array of values arrays
-  var data = inputData.map(function (d) {
+  var data = inputData.map(function(d) {
     return d.definition;
   });
 
@@ -51,9 +51,9 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
   var maxValue = Math.max(
     cfg.maxValue,
-    d3.max(data, function (i) {
+    d3.max(data, function(i) {
       return d3.max(
-        i.map(function (o) {
+        i.map(function(o) {
           return o.value;
         })
       );
@@ -61,9 +61,9 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   );
   var minValue = Math.min(
     0,
-    d3.min(data, function (i) {
+    d3.min(data, function(i) {
       return d3.min(
-        i.map(function (o) {
+        i.map(function(o) {
           return o.value;
         })
       );
@@ -75,15 +75,18 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     minValue = isNaN(layout.minValue) ? 0 : layout.minValue;
   }
 
+  let graphH;
+  let graphW;
+
   if (cfg.size.width < cfg.size.height) {
-    var graphH = cfg.size.width;
-    var graphW = cfg.size.width;
+    graphH = cfg.size.width;
+    graphW = cfg.size.width;
   } else {
-    var graphH = cfg.size.height;
-    var graphW = cfg.size.height;
+    graphH = cfg.size.height;
+    graphW = cfg.size.height;
   }
 
-  var allAxis = data[0].map(function (i) {
+  var allAxis = data[0].map(function(i) {
     return i.axis;
   }); //Names of each axis
   var axisTheshHold = 100;
@@ -165,7 +168,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .enter()
     .append("circle")
     .attr("class", "gridCircle")
-    .attr("r", function (d) {
+    .attr("r", function(d) {
       return (radius / cfg.levels) * d;
     })
     .style("fill", "#CDCDCD")
@@ -188,16 +191,16 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .append("line")
     .attr("x1", 0)
     .attr("y1", 0)
-    .attr("x2", function (d, i) {
+    .attr("x2", function(d, i) {
       return (
-        rScaleRangeChecked(maxValue * 1.1) *
-        Math.cos(angleSlice * i - Math.PI / 2)
+        rScaleRangeChecked(maxValue * 1.1)
+        * Math.cos(angleSlice * i - Math.PI / 2)
       );
     })
-    .attr("y2", function (d, i) {
+    .attr("y2", function(d, i) {
       return (
-        rScaleRangeChecked(maxValue * 1.1) *
-        Math.sin(angleSlice * i - Math.PI / 2)
+        rScaleRangeChecked(maxValue * 1.1)
+        * Math.sin(angleSlice * i - Math.PI / 2)
       );
     })
     .attr("class", "line")
@@ -211,19 +214,19 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .style("font-size", "14px")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
-    .attr("x", function (d, i) {
+    .attr("x", function(d, i) {
       return (
-        rScaleRangeChecked(maxValue * cfg.labelFactor) *
-        Math.cos(angleSlice * i - Math.PI / 2)
+        rScaleRangeChecked(maxValue * cfg.labelFactor)
+        * Math.cos(angleSlice * i - Math.PI / 2)
       );
     })
-    .attr("y", function (d, i) {
+    .attr("y", function(d, i) {
       return (
-        rScaleRangeChecked(maxValue * cfg.labelFactor) *
-        Math.sin(angleSlice * i - Math.PI / 2)
+        rScaleRangeChecked(maxValue * cfg.labelFactor)
+        * Math.sin(angleSlice * i - Math.PI / 2)
       );
     })
-    .text(function (d) {
+    .text(function(d) {
       return d;
     })
     .call(wrap, cfg.wrapWidth);
@@ -237,7 +240,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .radial()
     .interpolate("linear-closed")
     .radius((d) => (Number.isFinite(d.value) ? rScaleRangeChecked(d.value) : 1))
-    .angle(function (d, i) {
+    .angle(function(d, i) {
       return i * angleSlice;
     });
 
@@ -248,17 +251,17 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   //Append the backgrounds
   blobWrapper
     .append("path")
-    .attr("class", function (d) {
+    .attr("class", function(d) {
       return "radarArea" + " c" + getValidCssClassName(d[0].radar_area);
     })
-    .attr("d", function (d) {
+    .attr("d", function(d) {
       return radarLine(d);
     })
-    .style("fill", function (d, i) {
+    .style("fill", function(d, i) {
       return cfg.color(i);
     })
     .style("fill-opacity", cfg.colorOpacity.area)
-    .on("mouseover", function () {
+    .on("mouseover", function() {
       // Make cursor pointer when hovering over blob
       $(`#${chartContainerElementId}`).css("cursor", "pointer");
 
@@ -273,7 +276,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
         .duration(200)
         .style("fill-opacity", cfg.colorOpacity.area_over);
     })
-    .on("click", function (d) {
+    .on("click", function(d) {
       var isNull = false;
       d.find((e) => {
         if (e.dim1IsNull === true) {
@@ -285,7 +288,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
         self.backendApi.selectValues(0, [d[0].radar_area_id], true);
       }
     })
-    .on("mouseout", function () {
+    .on("mouseout", function() {
       // keep mouse cursor arrow instead of text select (auto)
       $("#" + chartContainerElementId).css("cursor", "default");
 
@@ -300,11 +303,11 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   blobWrapper
     .append("path")
     .attr("class", "radarStroke")
-    .attr("d", function (d) {
+    .attr("d", function(d) {
       return radarLine(d);
     })
     .style("stroke-width", cfg.strokeWidth + "px")
-    .style("stroke", function (d, i) {
+    .style("stroke", function(d, i) {
       return cfg.color(i);
     })
     .style("fill", "none");
@@ -312,24 +315,24 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   //Append the circles
   blobWrapper
     .selectAll(".radarCircle")
-    .data(function (d) {
+    .data(function(d) {
       return d;
     })
     .enter()
     .append("circle")
     .attr("class", "radarCircle")
     .attr("r", cfg.dotRadius)
-    .attr("cx", function (d, i) {
+    .attr("cx", function(d, i) {
       return (
         rScaleRangeChecked(d.value) * Math.cos(angleSlice * i - Math.PI / 2)
       );
     })
-    .attr("cy", function (d, i) {
+    .attr("cy", function(d, i) {
       return (
         rScaleRangeChecked(d.value) * Math.sin(angleSlice * i - Math.PI / 2)
       );
     })
-    .style("fill", function (d, i, j) {
+    .style("fill", function(d, i, j) {
       return cfg.color(j);
     })
     .style("fill-opacity", 0.8);
@@ -349,26 +352,26 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   //Append a set of invisible circles on top for the mouseover pop-up
   blobCircleWrapper
     .selectAll(".radarInvisibleCircle")
-    .data(function (d) {
+    .data(function(d) {
       return d;
     })
     .enter()
     .append("circle")
     .attr("class", "radarInvisibleCircle")
     .attr("r", cfg.dotRadius * 1.5)
-    .attr("cx", function (d, i) {
+    .attr("cx", function(d, i) {
       return (
         rScaleRangeChecked(d.value) * Math.cos(angleSlice * i - Math.PI / 2)
       );
     })
-    .attr("cy", function (d, i) {
+    .attr("cy", function(d, i) {
       return (
         rScaleRangeChecked(d.value) * Math.sin(angleSlice * i - Math.PI / 2)
       );
     })
     .style("fill", "none")
     .style("pointer-events", "all")
-    .on("mouseover", function (d) {
+    .on("mouseover", function(d) {
       if (!self._inEditState) {
         /// adding a css class to the parent SVG to prevent pointer events on edit mode was'nt enough for this interaction
         const newX = parseFloat(d3.select(this).attr("cx")) - 10;
@@ -379,20 +382,20 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
           .attr("x", newX)
           .attr("y", newY)
           .text(
-            d.radar_area +
-              " : " +
-              format(
-                options.numberFormat[0],
-                d.value * options.numberFormat[1]
-              ) +
-              options.numberFormat[2]
+            d.radar_area
+            + " : "
+            + format(
+              options.numberFormat[0],
+              d.value * options.numberFormat[1]
+            )
+            + options.numberFormat[2]
           )
           .transition()
           .duration(200)
           .style("opacity", 1);
       }
     })
-    .on("mouseout", function () {
+    .on("mouseout", function() {
       if (!self._inEditState) {
         tooltip.transition().duration(200).style("opacity", 0);
       }
@@ -407,18 +410,18 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .append("text")
     .attr("class", "axisLabel")
     .attr("x", 4)
-    .attr("y", function (d) {
+    .attr("y", function(d) {
       return (-d * radius) / cfg.levels;
     })
     .attr("dy", "0.4em")
     .style("font-size", "12px")
     .attr("fill", "#000000")
-    .text(function (d) {
+    .text(function(d) {
       return (
         format(
           options.numberFormat[0],
-          (minValue + ((maxValue - minValue) * d) / cfg.levels) *
-            options.numberFormat[1]
+          (minValue + ((maxValue - minValue) * d) / cfg.levels)
+          * options.numberFormat[1]
         ) + options.numberFormat[2]
       );
     });
@@ -430,7 +433,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   //Taken from http://bl.ocks.org/mbostock/7555321
   //Wraps SVG text
   function wrap(text, width) {
-    text.each(function () {
+    text.each(function() {
       var text = d3.select(this),
         words = text.text().split(/\s+/).reverse(),
         word,
@@ -466,8 +469,8 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   } //wrap
 
   function renderInvalidMessage($element) {
-    let errorMessage =
-      "The chart is not displayed because there might be an error with the data or the measure.";
+    let errorMessage
+      = "The chart is not displayed because there might be an error with the data or the measure.";
     let invalidMessageElement = document.createElement("div");
     invalidMessageElement.className = invalidMessageClassName;
     invalidMessageElement.innerText = errorMessage;
@@ -486,8 +489,8 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
 
     //Bring back the hovered over blob
     d3.select(
-      `#${chartContainerElementId} .c` +
-        getValidCssClassName(data[d][0].radar_area)
+      `#${chartContainerElementId} .c`
+      + getValidCssClassName(data[d][0].radar_area)
     )
       .transition()
       .duration(200)
@@ -533,61 +536,61 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   var aspectRatio = cfg.size.width / cfg.size.height;
   if (aspectRatio < 1.5 && cfg.size.height < 380) {
     return;
-  } else {
-    svg
-      .append("g")
-      .attr("class", "legendOrdinal")
-      .attr(
-        "transform",
-        "translate(" +
-          cfg["legendPosition"]["x"] +
-          "," +
-          cfg["legendPosition"]["y"] +
-          ")"
-      );
+  }
 
-    var legendOrdinal = d3.legend
-      .color()
-      .shape("path", d3.svg.symbol().type("circle").size(40)())
-      .shapePadding(10)
-      .scale(cfg.color)
-      .labels(
-        cfg.color.domain().map(function (d) {
-          return data[d][0].radar_area;
-        })
-      )
-      .on("cellover", function (d) {
-        cellover(d);
-      })
-      .on("cellclick", function (d) {
-        cellclick(d);
-      })
-      .on("cellout", function () {
-        cellout();
-      });
+  svg
+    .append("g")
+    .attr("class", "legendOrdinal")
+    .attr(
+      "transform",
+      "translate("
+      + cfg["legendPosition"]["x"]
+      + ","
+      + cfg["legendPosition"]["y"]
+      + ")"
+    );
 
-    if (
-      layout.qHyperCube.qDimensionInfo.length !== 1 &&
-      cfg.legendDisplay == true
-    ) {
-      svg.select(".legendOrdinal").call(legendOrdinal);
-    }
+  var legendOrdinal = d3.legend
+    .color()
+    .shape("path", d3.svg.symbol().type("circle").size(40)())
+    .shapePadding(10)
+    .scale(cfg.color)
+    .labels(
+      cfg.color.domain().map(function(d) {
+        return data[d][0].radar_area;
+      })
+    )
+    .on("cellover", function(d) {
+      cellover(d);
+    })
+    .on("cellclick", function(d) {
+      cellclick(d);
+    })
+    .on("cellout", function() {
+      cellout();
+    });
+
+  if (
+    layout.qHyperCube.qDimensionInfo.length !== 1
+    && cfg.legendDisplay == true
+  ) {
+    svg.select(".legendOrdinal").call(legendOrdinal);
   }
 
   /*
-IntegraXor Web SCADA - JavaScript Number Formatter
-http://www.integraxor.com/
-author: KPL, KHL
-(c)2011 ecava
-Dual licensed under the MIT or GPL Version 2 licenses.
-*/
+  IntegraXor Web SCADA - JavaScript Number Formatter
+  http://www.integraxor.com/
+  author: KPL, KHL
+  (c)2011 ecava
+  Dual licensed under the MIT or GPL Version 2 licenses.
+  */
 
   function format(m, v) {
     if (!m || isNaN(+v)) {
       return v; //return as it is.
     }
     //convert any string to number according to formation sign.
-    var v = m.charAt(0) == "-" ? -v : +v;
+    v = m.charAt(0) == "-" ? -v : +v;
     var isNegative = v < 0 ? (v = -v) : 0; //process only abs(), and turn on flag.
 
     //search for separator for grp & decimal, anything not digit, not +/- sign, not #.
@@ -596,7 +599,7 @@ Dual licensed under the MIT or GPL Version 2 licenses.
     var Group = (result && result[1] && result[0]) || ","; //treat the left most symbol as group separator
 
     //split the decimal for the format string if any.
-    var m = m.split(Decimal);
+    m = m.split(Decimal);
     //Fix the decimal first, toFixed will auto fill trailing zero.
     v = v.toFixed(m[1] && m[1].length);
     v = +v + ""; //convert number to string to trim off *all* trailing decimal zero(es)
