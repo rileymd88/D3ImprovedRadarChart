@@ -146,145 +146,145 @@ export default {
             }
           }
         }
-      },
-      settings: {
-        uses: "settings",
-        items: {
-          design: {
-            label: "Design",
-            type: "items",
-            items: {
-              Line: {
-                ref: "strokeStyle",
-                component: "dropdown",
-                type: "boolean",
-                label: "Stroke type",
-                defaultValue: true,
-                options: [{
-                  value: true,
-                  label: "Smooth"
-                }, {
-                  value: false,
-                  label: "Straight"
-                }],
-                show: true
+      }
+    },
+    settings: {
+      uses: "settings",
+      items: {
+        design: {
+          label: "Design",
+          type: "items",
+          items: {
+            Line: {
+              ref: "strokeStyle",
+              component: "dropdown",
+              type: "boolean",
+              label: "Stroke type",
+              defaultValue: true,
+              options: [{
+                value: true,
+                label: "Smooth"
+              }, {
+                value: false,
+                label: "Straight"
+              }],
+              show: true
+            },
+            Range: {
+              ref: "range",
+              component: "switch",
+              type: "boolean",
+              translation: "Range",
+              defaultValue: true,
+              trueOption: {
+                value: true,
+                translation: "Auto"
               },
-              Range: {
-                ref: "range",
-                component: "switch",
-                type: "boolean",
-                translation: "Range",
-                defaultValue: true,
-                trueOption: {
-                  value: true,
-                  translation: "Auto"
-                },
-                falseOption: {
-                  value: false,
-                  translation: "Custom"
-                },
-                show: true
+              falseOption: {
+                value: false,
+                translation: "Custom"
               },
-              MaxValue: {
-                ref: "maxValue",
-                type: "number",
-                expression: "optional",
-                defaultValue: 1,
-                show: function(data) {
-                  return data.range === false;
-                }
-              },
-              MinValue: {
-                ref: "minValue",
-                type: "number",
-                expression: "optional",
-                defaultValue: 0,
-                show: function(data) {
-                  return data.range === false;
-                }
-              },
-              Legend: {
-                ref: "showLegend",
-                component: "switch",
-                type: "boolean",
-                translation: "Legend",
-                defaultValue: true,
-                trueOption: {
-                  value: true,
-                  translation: "properties.on"
-                },
-                falseOption: {
-                  value: false,
-                  translation: "properties.off"
-                },
-                show: true
-              },
-              colors: {
-                ref: "ColorSchema",
-                type: "string",
-                component: "item-selection-list",
-                label: "Color",
-                show: true,
-                defaultValue: COLOR_SCALES.TWELVE_COLORS,
-                items: [
-                  /*{
-                    component: "color-scale",
-                    colors: COLOR_SCALES.SEQUENTIAL,
-                    value: COLOR_SCALES.SEQUENTIAL,
-                    label: "Sequential"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.SEQUENTIAL_REVERSE,
-                    value: COLOR_SCALES.SEQUENTIAL_REVERSE,
-                    label: "Sequential (Reverse)"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.DIVERGING_RDYLBU,
-                    value: COLOR_SCALES.DIVERGING_RDYLBU,
-                    label: "Diverging RdYlBu"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.DIVERGING_BUYLRD,
-                    value: COLOR_SCALES.DIVERGING_BUYLRD,
-                    label: "Diverging BuYlRd"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.BLUES,
-                    value: COLOR_SCALES.BLUES,
-                    label: "Blues"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.REDS,
-                    value: COLOR_SCALES.REDS,
-                    label: "Reds"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.YLGNBU,
-                    value: COLOR_SCALES.YLGNBU,
-                    label: "YlGnBu"
-                  },*/ {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.TWELVE_COLORS,
-                    value: COLOR_SCALES.TWELVE_COLORS,
-                    label: "12 colors"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.TWELVE_COLORS_REVERSE,
-                    value: COLOR_SCALES.TWELVE_COLORS_REVERSE,
-                    label: "12 colors (Reverse)"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.BLUE_PURPLE,
-                    value: COLOR_SCALES.BLUE_PURPLE,
-                    label: "Blue purple colors"
-                  }, {
-                    component: "color-scale",
-                    colors: COLOR_SCALES.BREEZE,
-                    value: COLOR_SCALES.BREEZE,
-                    label: "Breeze theme colors"
-                  }
-                ]
+              show: true
+            },
+            MaxValue: {
+              ref: "maxValue",
+              type: "number",
+              expression: "optional",
+              defaultValue: 1,
+              show: function(data) {
+                return data.range === false;
               }
+            },
+            MinValue: {
+              ref: "minValue",
+              type: "number",
+              expression: "optional",
+              defaultValue: 0,
+              show: function(data) {
+                return data.range === false;
+              }
+            },
+            Legend: {
+              ref: "showLegend",
+              component: "switch",
+              type: "boolean",
+              translation: "Legend",
+              defaultValue: true,
+              trueOption: {
+                value: true,
+                translation: "properties.on"
+              },
+              falseOption: {
+                value: false,
+                translation: "properties.off"
+              },
+              show: true
+            },
+            colors: {
+              ref: "ColorSchema",
+              type: "string",
+              component: "item-selection-list",
+              label: "Color",
+              show: true,
+              defaultValue: COLOR_SCALES.TWELVE_COLORS,
+              items: [
+                /*{
+                      component: "color-scale",
+                      colors: COLOR_SCALES.SEQUENTIAL,
+                      value: COLOR_SCALES.SEQUENTIAL,
+                      label: "Sequential"
+                    }, {
+                      component: "color-scale",
+                      colors: COLOR_SCALES.SEQUENTIAL_REVERSE,
+                      value: COLOR_SCALES.SEQUENTIAL_REVERSE,
+                      label: "Sequential (Reverse)"
+                    }, {
+                      component: "color-scale",
+                      colors: COLOR_SCALES.DIVERGING_RDYLBU,
+                      value: COLOR_SCALES.DIVERGING_RDYLBU,
+                      label: "Diverging RdYlBu"
+                    }, {
+                      component: "color-scale",
+                      colors: COLOR_SCALES.DIVERGING_BUYLRD,
+                      value: COLOR_SCALES.DIVERGING_BUYLRD,
+                      label: "Diverging BuYlRd"
+                    }, {
+                      component: "color-scale",
+                      colors: COLOR_SCALES.BLUES,
+                      value: COLOR_SCALES.BLUES,
+                      label: "Blues"
+                    }, {
+                      component: "color-scale",
+                      colors: COLOR_SCALES.REDS,
+                      value: COLOR_SCALES.REDS,
+                      label: "Reds"
+                    }, {
+                      component: "color-scale",
+                      colors: COLOR_SCALES.YLGNBU,
+                      value: COLOR_SCALES.YLGNBU,
+                      label: "YlGnBu"
+                    },*/ {
+                  component: "color-scale",
+                  colors: COLOR_SCALES.TWELVE_COLORS,
+                  value: COLOR_SCALES.TWELVE_COLORS,
+                  label: "12 colors"
+                }, {
+                  component: "color-scale",
+                  colors: COLOR_SCALES.TWELVE_COLORS_REVERSE,
+                  value: COLOR_SCALES.TWELVE_COLORS_REVERSE,
+                  label: "12 colors (Reverse)"
+                }, {
+                  component: "color-scale",
+                  colors: COLOR_SCALES.BLUE_PURPLE,
+                  value: COLOR_SCALES.BLUE_PURPLE,
+                  label: "Blue purple colors"
+                }, {
+                  component: "color-scale",
+                  colors: COLOR_SCALES.BREEZE,
+                  value: COLOR_SCALES.BREEZE,
+                  label: "Breeze theme colors"
+                }
+              ]
             }
           }
         }
@@ -300,7 +300,7 @@ export default {
           },
           paragraph1: {
             label: `Radar chart is a two-dimensional chart that uses radical axes to show the
-              scoring of a measure in one dimension over another.`,
+                  scoring of a measure in one dimension over another.`,
             component: 'text'
           },
           paragraph2: {
