@@ -57,6 +57,37 @@ function setInitialSort(props) {
   }
 }
 
+const numberFormattingItems = {
+  numberFormattingMode: {
+    show: false
+  },
+  numberFormattingType: {
+    options: function() {
+      return [
+        {
+          value: "U",
+          translation: "Common.Auto"
+        },
+        {
+          value: "F",
+          translation: "properties.numberFormatting.types.number"
+        },
+      ];
+    }
+  }
+};
+
+const numberFormatting = {
+  items: {
+    numberFormat: {
+      items: numberFormattingItems
+    }
+  },
+};
+
+// Support without flag MASTER_MEASURE_FORMAT (remove line below when flag becomes permanent)
+Object.assign(numberFormatting.items, Object.assign({}, numberFormattingItems));
+
 export default {
   initialProperties: {
     qHyperCubeDef: {
@@ -111,27 +142,7 @@ export default {
           measures: {
             disabledRef: "",
             items: {
-              numberFormatting: {
-                items: {
-                  numberFormattingMode: {
-                    show: false
-                  },
-                  numberFormattingType: {
-                    options: function() {
-                      return [
-                        {
-                          value: "U",
-                          translation: "Common.Auto"
-                        },
-                        {
-                          value: "F",
-                          translation: "properties.numberFormatting.types.number"
-                        },
-                      ];
-                    }
-                  },
-                }
-              }
+              numberFormatting: numberFormatting
             }
           }
         }
