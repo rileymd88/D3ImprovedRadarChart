@@ -1,46 +1,80 @@
+var qlik = window.require("qlik");
 import d3 from "d3";
 import displayRADAR from "./radarChart";
 
 function paint($element, layout) {
   const component = this;
+  const app = qlik.currApp(this);
   //////////////////////////////////////////////////////////////
   ////////////////////////// Data //////////////////////////////
   //////////////////////////////////////////////////////////////
   var json = convertHYPERCUBEtoJSON(layout);
 
-  var colorpalette = layout.ColorSchema;
+  function getProperty(obj, prop) {
+    var parts = prop.split(".");
+    if (Array.isArray(parts)) {
+      var last = parts.pop(),
+        l = parts.length,
+        i = 1,
+        current = parts[0];
+      while ((obj = obj[current]) && i < l) {
+        current = parts[i];
+        i++;
+      }
+      if (obj) {
+        return obj[last];
+      }
+    } else {
+      throw "parts is not valid array";
+    }
+  }
 
-  //////////////////////////////////////////////////////////////
-  ////////////////////// Set-Up display ////////////////////////
-  //////////////////////////////////////////////////////////////
-
-  var options = {
-    size: { width: $element.width(), height: $element.height() }, //Width and Height of the circle
-    margin: { top: 0, right: 10, bottom: 40, left: 10 }, //The margins around the circle
-    legendPosition: { x: 10, y: 10 }, //The position of the legend, from the top-left corner of the svg
-    color: d3.scale.ordinal().range(colorpalette), //Color function
-    colorOpacity: {
-      circle: 0.1,
-      area: 0.2,
-      area_out: 0.1,
-      area_over: 0.6,
-      area_click: 0.8
-    }, //The opacity of the area of the blob
-    roundStrokes: layout.strokeStyle, //If true the area and stroke will follow a round path (cardinal-closed)
-    maxValue: 0.6, //What is the value that the biggest circle will represent
-    levels: 6, //How many levels or inner circles should there be drawn
-    dotRadius: 4, //The size of the colored circles of each blob
-    labelFactor: 1.02, //How much farther than the radius of the outer circle should the labels be placed
-    wrapWidth: 50, //The number of pixels after which a label needs to be given a new line
-    strokeWidth: 2.8, //The width of the stroke around each blob
-    legendDisplay: layout.showLegend, //Display the legend
-    numberFormat: getFORMAT(layout) //Format for number
+  const getColorPallette = async (app, layout) => {
+    if (layout.colorByDimension) {
+      const colorMapRef = getProperty(
+        layout,
+        "qHyperCube.qDimensionInfo.0.coloring.colorMapRef"
+      );
+      const colarMapObject = await app.getObject(`ColorMapModel_${colorMapRef}`);
+      const colorMapLayout = await colarMapObject.getLayout();
+      return colorMapLayout.colorMap.colors.map(c => c.baseColor.color);
+    }
+    else {
+      return layout.ColorSchema;
+    }
   };
-
-  //////////////////////////////////////////////////////////////
-  //////////////////// Draw the Chart //////////////////////////
-  //////////////////////////////////////////////////////////////
-  displayRADAR(".radarChart", options, $element, layout, json, component);
+  
+  const setup = async (app, layout, $element) => {
+    var options = {
+      size: { width: $element.width(), height: $element.height() },
+      margin: { top: 0, right: 10, bottom: 40, left: 10 },
+      legendPosition: { x: 10, y: 10 },
+      colorOpacity: {
+        circle: 0.1,
+        area: 0.2,
+        area_out: 0.1,
+        area_over: 0.6,
+        area_click: 0.8,
+      },
+      roundStrokes: layout.strokeStyle,
+      maxValue: 0.6,
+      levels: 6,
+      dotRadius: 4,
+      labelFactor: 1.02,
+      wrapWidth: 50,
+      strokeWidth: 2.8,
+      legendDisplay: layout.showLegend,
+      numberFormat: getFORMAT(layout),
+    };
+  
+    const colorPalette = await getColorPallette(app, layout);
+    options.color = d3.scale.ordinal().range(colorPalette);
+    //////////////////////////////////////////////////////////////
+    //////////////////// Draw the Chart //////////////////////////
+    //////////////////////////////////////////////////////////////
+    displayRADAR(".radarChart", options, $element, layout, json, component, app);
+  };
+  setup(app, layout, $element);
 }
 
 function getFORMAT(layout) {

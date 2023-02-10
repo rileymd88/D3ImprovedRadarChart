@@ -1,5 +1,5 @@
 {
-  "name": "qlik-radar-chart",
+  "name": "qlik-radar-chart-ext",
   "version": "0.0.1",
   "description": "A two-dimensional chart using radial axes to show the scoring of a measure in one dimension over another.",
   "homepage": "",
@@ -7,8 +7,8 @@
   "author": "Brian Booden <brianbooden@users.noreply.github.com>, VizMatt <matthieu.burel@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "gulp build",
-    "build:zip": "gulp zip",
+    "build": "gulp --openssl-legacy-provider build",
+    "build:zip": "gulp --openssl-legacy-provider zip",
     "eslint": "eslint src"
   },
   "devDependencies": {
@@ -28,10 +28,11 @@
     "jquery": "3.3.1",
     "less": "3.8.1",
     "less-loader": "4.1.0",
+    "qlik-chart-modules": "0.48.0",
     "style-loader": "0.23.1",
     "stylelint": "8.4.0",
     "stylelint-webpack-plugin": "0.10.5",
-    "webpack": "4.20.2"
+    "webpack": "5.75.0"
   },
   "dependencies": {
     "d3": "3.5.17",

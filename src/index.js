@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // Distributed using MIT License
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -11,6 +12,7 @@
 
 import paint from './paint';
 import './styles.less';
+import { setValue } from 'qlik-chart-modules';
 
 if (!window._babelPolyfill) { //eslint-disable-line no-underscore-dangle
   require('@babel/polyfill');
@@ -222,12 +224,34 @@ export default {
                 },
                 show: true
               },
+              ColorByDimension: {
+                ref: "colorByDimension",
+                component: "switch",
+                type: "boolean",
+                translation: "Color by dimension",
+                defaultValue: false,
+                trueOption: {
+                  value: true,
+                  translation: "properties.on",
+                },
+                falseOption: {
+                  value: false,
+                  translation: "properties.off",
+                },
+                show: true,
+                change: (data) => {
+                  if (data.colorByDimension) {
+                    setValue(data, 'color.mode', 'byDimension');
+                    setValue(data, 'color.byDimDef.activeDimensionIndex', 0);
+                  }
+                },
+              },
               colors: {
                 ref: "ColorSchema",
                 type: "string",
                 component: "item-selection-list",
                 label: "Color",
-                show: true,
+                show: (data) => !data.colorByDimension,
                 defaultValue: COLOR_SCALES.TWELVE_COLORS,
                 items: [
                   /*{
