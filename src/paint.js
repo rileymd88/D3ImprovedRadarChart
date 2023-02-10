@@ -29,7 +29,7 @@ function paint($element, layout) {
     }
   }
 
-  const getColorPallette = async (app, layout) => {
+  const getColors = async (app, layout) => {
     if (layout.colorByDimension) {
       const colorMapRef = getProperty(
         layout,
@@ -38,18 +38,18 @@ function paint($element, layout) {
       if(typeof colorMapRef !== 'undefined') {
         const colarMapObject = await app.getObject(`ColorMapModel_${colorMapRef}`);
         const colorMapLayout = await colarMapObject.getLayout();
-        return colorMapLayout.colorMap.colors.map(c => c.baseColor.color);
+        return { palette: colorMapLayout.colorMap.colors.map(c => c.baseColor.color), colorMap: colorMapLayout };
       }
       else {
-        return layout.ColorSchema;
+        return { palette: layout.ColorSchema, colorMap: layout.ColorSchema };
       }
     }
     else {
-      return layout.ColorSchema;
+      return { palette: layout.ColorSchema, colorMap: layout.ColorSchema };
     }
   };
   
-  const setup = async (app, layout, $element) => {
+  const setup = async (app, layout, $element, json) => {
     var options = {
       size: { width: $element.width(), height: $element.height() },
       margin: { top: 0, right: 10, bottom: 40, left: 10 },
@@ -71,15 +71,24 @@ function paint($element, layout) {
       legendDisplay: layout.showLegend,
       numberFormat: getFORMAT(layout),
     };
-  
-    const colorPalette = await getColorPallette(app, layout);
-    options.color = d3.scale.ordinal().range(colorPalette);
+    const colors = await getColors(app, layout);
+    options.colorMap = colors.colorMap;
+    if(layout.persistentColors && layout.colorByDimension) {
+      const radarAreas = json.map(d => d.dim);
+      const palette = colors.colorMap.colorMap.colors
+        .filter(c => radarAreas.includes(c.value))
+        .map(c => c. baseColor.color);
+      options.color = d3.scale.ordinal(radarAreas).range(palette);
+    }
+    else {
+      options.color = d3.scale.ordinal().range(colors.palette);
+    }
     //////////////////////////////////////////////////////////////
     //////////////////// Draw the Chart //////////////////////////
     //////////////////////////////////////////////////////////////
     displayRADAR(".radarChart", options, $element, layout, json, component, app);
   };
-  setup(app, layout, $element);
+  setup(app, layout, $element, json);
 }
 
 function getFORMAT(layout) {

@@ -246,6 +246,22 @@ export default {
                   }
                 },
               },
+              PersistentColors: {
+                ref: "persistentColors",
+                component: "checkbox",
+                type: "boolean",
+                translation: "Persistent colors",
+                defaultValue: false,
+                trueOption: {
+                  value: true,
+                  translation: "properties.on",
+                },
+                falseOption: {
+                  value: false,
+                  translation: "properties.off",
+                },
+                show: (data) => data.colorByDimension
+              },
               colors: {
                 ref: "ColorSchema",
                 type: "string",
