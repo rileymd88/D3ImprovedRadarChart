@@ -35,9 +35,14 @@ function paint($element, layout) {
         layout,
         "qHyperCube.qDimensionInfo.0.coloring.colorMapRef"
       );
-      const colarMapObject = await app.getObject(`ColorMapModel_${colorMapRef}`);
-      const colorMapLayout = await colarMapObject.getLayout();
-      return colorMapLayout.colorMap.colors.map(c => c.baseColor.color);
+      if(typeof colorMapRef !== 'undefined') {
+        const colarMapObject = await app.getObject(`ColorMapModel_${colorMapRef}`);
+        const colorMapLayout = await colarMapObject.getLayout();
+        return colorMapLayout.colorMap.colors.map(c => c.baseColor.color);
+      }
+      else {
+        return layout.ColorSchema;
+      }
     }
     else {
       return layout.ColorSchema;
